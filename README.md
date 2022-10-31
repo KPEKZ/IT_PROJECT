@@ -10,7 +10,7 @@
 Распределение ролей также показано в Google-таблице:
 [Кондуит ИДМ-22](https://docs.google.com/spreadsheets/d/1ypxgDUpNsaAK5PH90dTfGKdtDnWaeEDWfupEbDokN6A/edit?usp=sharing)
 
-##Процесс разработки
+## Процесс разработки
 
 | Задача  | Стадия |
 | ------------- | ------------- |
