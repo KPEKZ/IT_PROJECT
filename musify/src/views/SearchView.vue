@@ -15,6 +15,15 @@
       subtitle="..."
     ></v-list-item>
   </v-list>
+
+  <v-list v-if="albums" lines="one">
+    <v-list-item
+      v-for="album in albums"
+      :key="album.id"
+      :title="album.title"
+      subtitle="..."
+    ></v-list-item>
+  </v-list>
 </template>
 
 <script>
@@ -27,6 +36,7 @@ export default {
     return {
       query: null,
       songs: null,
+      albums: null,
     };
   },
 
@@ -51,6 +61,7 @@ export default {
       this.$emit("input", value);
       this.$store.dispatch("fetchSongs", value);
       this.songs = this.$store.getters.getSongs;
+      this.albums = this.$store.getters.getAlbums;
     }, 500),
   },
   mounted() {},
