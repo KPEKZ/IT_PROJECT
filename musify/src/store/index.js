@@ -5,6 +5,7 @@ export default createStore({
   state: {
     songs: [],
     albums: [],
+    artists: [],
     songsIsLoading: false,
   },
   getters: {
@@ -14,6 +15,9 @@ export default createStore({
     getAlbums(state) {
       return state.albums;
     },
+    getArtists(state) {
+      return state.artists;
+    },
   },
   mutations: {
     setSongs(state, songs) {
@@ -21,6 +25,9 @@ export default createStore({
     },
     setAlbums(state, albums) {
       state.albums = albums;
+    },
+    setArtists(state, artists) {
+      state.artists = artists;
     },
     setSongsIsLoading(state, value) {
       state.songsIsLoading = value;
@@ -33,9 +40,11 @@ export default createStore({
         .then((res) => {
           const songs = res.data;
           const albums = songs?.map((song) => song.album);
+          const artists = songs?.map((song) => song.artist);
 
           commit("setSongs", songs);
           commit("setAlbums", albums);
+          commit("setArtists", artists);
         })
         .finally(() => {
           commit("setSongsIsLoading", false);
