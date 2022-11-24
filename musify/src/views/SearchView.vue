@@ -7,23 +7,22 @@
   >
   </v-text-field>
 
-<!--  <v-list v-if="songs" lines="one">-->
-<!--    <v-list-item-->
-<!--      v-for="item in songs"-->
-<!--      :key="item.id"-->
-<!--      :title="item.title"-->
-<!--      subtitle="..."-->
-<!--    ></v-list-item>-->
-<!--  </v-list>-->
-
-<!--  <v-list v-if="albums" lines="one">-->
-<!--    <v-list-item-->
-<!--      v-for="album in albums"-->
-<!--      :key="album.id"-->
-<!--      :title="album.title"-->
-<!--      subtitle="..."-->
-<!--    ></v-list-item>-->
-<!--  </v-list>-->
+  <v-list v-if="songs" lines="one">
+    <v-list-item
+      v-for="item in songs"
+      :key="item.id"
+      :title="item.title"
+      subtitle="..."
+    ></v-list-item>
+  </v-list>
+  <v-list v-if="albums" lines="one">
+    <v-list-item
+      v-for="album in albums"
+      :key="album.id"
+      :title="album.title"
+      subtitle="..."
+    ></v-list-item>
+  </v-list>
 
   <v-list v-if="artists" lines="one">
     <v-list-item
@@ -31,7 +30,8 @@
       :key="artist.id"
       :title="artist.name"
       subtitle="..."
-    ></v-list-item>
+    >
+    </v-list-item>
   </v-list>
 </template>
 
