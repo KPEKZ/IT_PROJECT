@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  name: "Song",
+  name: "LibraryView",
 };
 </script>
 
