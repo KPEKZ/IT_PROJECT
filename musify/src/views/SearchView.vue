@@ -7,30 +7,17 @@
   >
   </v-text-field>
 
-  <v-list v-if="songs" lines="one">
+  <v-list v-if="songs" lines="one" class="list__song">
     <v-list-item
       v-for="item in songs"
       :key="item.id"
       :title="item.title"
-      subtitle="..."
-    ></v-list-item>
-  </v-list>
-  <v-list v-if="albums" lines="one">
-    <v-list-item
-      v-for="album in albums"
-      :key="album.id"
-      :title="album.title"
-      subtitle="..."
-    ></v-list-item>
-  </v-list>
-
-  <v-list v-if="artists" lines="one">
-    <v-list-item
-      v-for="artist in artists"
-      :key="artist.id"
-      :title="artist.name"
-      subtitle="..."
+      :subtitle="item.artist.name"
+      :prepend-avatar="item.artist.picture"
     >
+      <v-btn class="play__btn">
+        <v-icon size="20px">mdi-play</v-icon>
+      </v-btn>
     </v-list-item>
   </v-list>
 </template>
@@ -83,4 +70,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.play__btn {
+  box-shadow: none;
+  border-radius: 20px;
+  height: 20px;
+  width: 20px;
+}
+</style>
