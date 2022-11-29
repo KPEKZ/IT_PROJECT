@@ -13,11 +13,14 @@
       :key="item.id"
       :title="item.title"
       :subtitle="item.artist.name"
-      :prepend-avatar="item.artist.picture"
     >
-      <v-btn class="play__btn">
-        <v-icon size="20px">mdi-play</v-icon>
-      </v-btn>
+      <template v-slot:prepend>
+        <v-avatar :image="item.artist.picture" :rounded="0"></v-avatar>
+      </template>
+      <template v-slot:append>
+        <v-btn :icon="'mdi-play-outline'" variant="text"></v-btn>
+        <v-btn :icon="'mdi-menu'" variant="text"></v-btn>
+      </template>
     </v-list-item>
   </v-list>
 </template>
@@ -70,11 +73,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.play__btn {
-  box-shadow: none;
-  border-radius: 20px;
-  height: 20px;
-  width: 20px;
-}
-</style>
+<style scoped></style>
