@@ -7,30 +7,20 @@
   >
   </v-text-field>
 
-  <v-list v-if="songs" lines="one">
+  <v-list v-if="songs" lines="one" class="list__song">
     <v-list-item
       v-for="item in songs"
       :key="item.id"
       :title="item.title"
-      subtitle="..."
-    ></v-list-item>
-  </v-list>
-  <v-list v-if="albums" lines="one">
-    <v-list-item
-      v-for="album in albums"
-      :key="album.id"
-      :title="album.title"
-      subtitle="..."
-    ></v-list-item>
-  </v-list>
-
-  <v-list v-if="artists" lines="one">
-    <v-list-item
-      v-for="artist in artists"
-      :key="artist.id"
-      :title="artist.name"
-      subtitle="..."
+      :subtitle="item.artist.name"
     >
+      <template v-slot:prepend>
+        <v-avatar :image="item.artist.picture" :rounded="0"></v-avatar>
+      </template>
+      <template v-slot:append>
+        <v-btn :icon="'mdi-play-outline'" variant="text"></v-btn>
+        <v-btn :icon="'mdi-menu'" variant="text"></v-btn>
+      </template>
     </v-list-item>
   </v-list>
 </template>

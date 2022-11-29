@@ -1,15 +1,4 @@
-<template>
-  <v-container>
-    <!--    <section class="albums">-->
-    <!--      <Album v-for="item in albums" :key="item.id" :item="item" />-->
-    <!--    </section>-->
-    <v-carousel v-if="albums" class="carousel">
-      <v-carousel-item :key="i" v-for="(chunk, i) in albumsChunks">
-        <Album :key="j" v-for="(slide, j) in chunk" :item="slide" />
-      </v-carousel-item>
-    </v-carousel>
-  </v-container>
-</template>
+<template><div></div></template>
 
 <script>
 import Album from "@/components/Album";
