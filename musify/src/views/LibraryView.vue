@@ -53,6 +53,7 @@ export default {
       albums: [],
     };
   },
+
   components: {
     Album,
   },
@@ -93,6 +94,7 @@ export default {
       return splitedAlbums;
     },
   },
+
   mounted() {
     this.$store.dispatch("fetchSongs", "eminem");
     this.albums = this.$store.getters.getAlbums;
