@@ -1,8 +1,6 @@
 <template><div></div></template>
 
 <script>
-import Album from "@/components/Album";
-
 export default {
   name: "LibraryView",
   data() {
@@ -10,9 +8,6 @@ export default {
       albums: [],
       albumsChunks: [],
     };
-  },
-  components: {
-    Album,
   },
   mounted() {
     this.$store.dispatch("fetchSongs", "eminem");

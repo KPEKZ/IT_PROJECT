@@ -6,27 +6,12 @@
     v-model="query"
   >
   </v-text-field>
-
-  <v-list v-if="songs" lines="one" class="list__song">
-    <v-list-item
-      v-for="item in songs"
-      :key="item.id"
-      :title="item.title"
-      :subtitle="item.artist.name"
-    >
-      <template v-slot:prepend>
-        <v-avatar :image="item.artist.picture" :rounded="0"></v-avatar>
-      </template>
-      <template v-slot:append>
-        <v-btn :icon="'mdi-play-outline'" variant="text"></v-btn>
-        <v-btn :icon="'mdi-menu'" variant="text"></v-btn>
-      </template>
-    </v-list-item>
-  </v-list>
+  <SongsList class="list__song" :songs="songs"></SongsList>
 </template>
 
 <script>
 import _debounce from "lodash/debounce";
+import SongsList from "@/components/SongsList";
 
 export default {
   name: "SearchView",
@@ -40,9 +25,21 @@ export default {
     };
   },
 
+  components: {
+    SongsList,
+  },
+
   computed: {
     getSongs() {
       return this.$store.getters.getSongs;
+    },
+
+    getArtists() {
+      return this.$store.getters.getArtists;
+    },
+
+    getAlbums() {
+      return this.$store.getters.getAlbums;
     },
   },
 
@@ -53,10 +50,6 @@ export default {
   },
 
   methods: {
-    getArtists() {
-      return this.$store.getters.getArtists;
-    },
-
     updateQuery(event) {
       this.updateValueWithDelay(event.target.value);
     },
@@ -66,10 +59,9 @@ export default {
       this.$store.dispatch("fetchSongs", value);
       this.songs = this.$store.getters.getSongs;
       this.albums = this.$store.getters.getAlbums;
-      this.artists = this.getArtists();
+      this.artists = this.$store.getters.getArtists;
     }, 500),
   },
-  mounted() {},
 };
 </script>
 
