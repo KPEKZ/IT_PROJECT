@@ -8,7 +8,7 @@
             <v-row class="carousel-row">
               <template :key="i" v-for="(album, i) in albumChunk">
                 <v-col class="carousel-col">
-                  <Album :item="album"></Album>
+                  <AlbumItem :item="album"></AlbumItem>
                 </v-col>
               </template>
             </v-row>
@@ -19,23 +19,7 @@
     <v-row class="row rounded-lg">
       <section class="songs">
         <h3 class="header">Songs</h3>
-
-        <v-list v-if="getSongs" lines="one" class="list__song">
-          <v-list-item
-            v-for="item in getSongs"
-            :key="item.id"
-            :title="item.title"
-            :subtitle="item.artist.name"
-          >
-            <template v-slot:prepend>
-              <v-avatar :image="item.artist.picture" :rounded="0"></v-avatar>
-            </template>
-            <template v-slot:append>
-              <v-btn :icon="'mdi-play-outline'" variant="text"></v-btn>
-              <v-btn :icon="'mdi-menu'" variant="text"></v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
+        <SongsList :songs="songs"></SongsList>
       </section>
     </v-row>
   </v-container>
@@ -43,7 +27,8 @@
 
 <script>
 import _ from "lodash";
-import Album from "@/components/Album";
+import AlbumItem from "@/components/AlbumItem";
+import SongsList from "@/components/SongsList";
 
 export default {
   name: "LibraryView",
@@ -51,11 +36,13 @@ export default {
     return {
       columns: 4,
       albums: [],
+      songs: [],
     };
   },
 
   components: {
-    Album,
+    AlbumItem,
+    SongsList,
   },
   computed: {
     clearedAlbums() {
@@ -98,6 +85,8 @@ export default {
   mounted() {
     this.$store.dispatch("fetchSongs", "eminem");
     this.albums = this.$store.getters.getAlbums;
+    this.songs = this.$store.getters.getSongs;
+    console.log(this.songs);
   },
 };
 </script>
