@@ -6,7 +6,7 @@
     v-model="query"
   >
   </v-text-field>
-  <SongsList class="list__song" :songs="songs"></SongsList>
+  <SongsList v-if="songs" class="list__song" :songs="songs"></SongsList>
 </template>
 
 <script>

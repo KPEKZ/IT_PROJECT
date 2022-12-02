@@ -1,5 +1,5 @@
 <template>
-  <v-list v-if="songs" lines="one" class="list__song">
+  <v-list lines="one" class="list__song">
     <SongItem v-for="item in songs" :key="item.id" :song="item"></SongItem>
   </v-list>
 </template>
