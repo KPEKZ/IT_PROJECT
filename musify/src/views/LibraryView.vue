@@ -4,6 +4,12 @@
     <v-row class="row rounded-lg">
       <AlbumsList :albums="getAlbums"></AlbumsList>
     </v-row>
+    <v-row> <h3 class="header">Artists</h3></v-row>
+    <v-row class="row rounded-lg">
+      <section class="songs">
+        <ArtistsList :artists="artists"></ArtistsList>
+      </section>
+    </v-row>
     <v-row> <h3 class="header">Songs</h3></v-row>
     <v-row class="row rounded-lg">
       <section class="songs">
@@ -16,6 +22,7 @@
 <script>
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
+import ArtistsList from "@/components/ArtistsList";
 
 export default {
   name: "LibraryView",
@@ -23,12 +30,14 @@ export default {
     return {
       albums: [],
       songs: [],
+      artists: [],
     };
   },
 
   components: {
     SongsList,
     AlbumsList,
+    ArtistsList,
   },
   computed: {
     getSongs() {
@@ -38,6 +47,10 @@ export default {
     getAlbums() {
       return this.$store.getters.getAlbums;
     },
+
+    getArtists() {
+      return this.$store.getters.getArtists;
+    },
   },
   methods: {},
 
@@ -45,11 +58,16 @@ export default {
     getAlbums: function (newAlbums) {
       this.albums = newAlbums;
     },
+
+    getArtists: function (newArtists) {
+      this.artists = newArtists;
+    },
   },
 
   mounted() {
     this.albums = this.$store.getters.getAlbums;
     this.songs = this.$store.getters.getSongs;
+    this.artists = this.$store.getters.getArtists;
   },
 };
 </script>
@@ -63,6 +81,7 @@ export default {
 
 .row {
   box-shadow: 0 0 3px 1px rgba(34, 60, 80, 0.2);
+  margin: 0;
 }
 
 .header {
