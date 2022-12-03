@@ -4,11 +4,12 @@ const headerOptions = {
   "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
 };
 
-export async function getAllSongs(query) {
+export async function getAllSongs(query, next = 0) {
   if (typeof query !== "string") return;
+  let url = API_URL_KEY + `search?q=${query}&index=${next}`;
 
   try {
-    const response = await fetch(API_URL_KEY + `search?q=${query}`, {
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         ...headerOptions,

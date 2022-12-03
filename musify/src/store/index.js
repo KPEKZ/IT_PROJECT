@@ -9,6 +9,7 @@ export default createStore({
     librarySongs: [],
     libraryAlbums: [],
     songsIsLoading: false,
+    nextSongs: 0,
   },
   getters: {
     getSongs(state) {
@@ -26,16 +27,31 @@ export default createStore({
     getLibraryAlbums(state) {
       return state.libraryAlbums;
     },
+    getNextSongs(state) {
+      return state.nextSongs;
+    },
   },
   mutations: {
     setSongs(state, songs) {
       state.songs = songs;
     },
+    addSongs(state, songs) {
+      if (!Array.isArray(songs)) return;
+      state.songs.push(...songs);
+    },
     setAlbums(state, albums) {
       state.albums = albums;
     },
+    addAlbums(state, albums) {
+      if (!Array.isArray(albums)) return;
+      state.albums.push(...albums);
+    },
     setArtists(state, artists) {
       state.artists = artists;
+    },
+    addArtists(state, artists) {
+      if (!Array.isArray(artists)) return;
+      state.artists.push(...artists);
     },
     setSongsIsLoading(state, value) {
       state.songsIsLoading = value;
@@ -62,9 +78,12 @@ export default createStore({
     addLibrarySong(state, song) {
       state.librarySongs.push(song);
     },
+    setNextSongs(state, next) {
+      if (next !== null || undefined) state.nextSongs += next;
+    },
   },
   actions: {
-    fetchSongs({ commit }, query) {
+    fetchInitSongs({ commit }, query) {
       commit("setSongsIsLoading", true);
       getAllSongs(query)
         .then((res) => {
@@ -75,10 +94,37 @@ export default createStore({
           commit("setSongs", songs);
           commit("setAlbums", albums);
           commit("setArtists", artists);
+          if (res.next) {
+            commit("setNextSongs", 25);
+          }
         })
         .finally(() => {
           commit("setSongsIsLoading", false);
         });
+    },
+    fetchNextSongs({ commit, state }, query) {
+      commit("setSongsIsLoading", true);
+
+      getAllSongs(query, state.nextSongs)
+        .then((res) => {
+          const songs = res.data;
+          const albums = songs?.map((song) => song.album);
+          const artists = songs?.map((song) => song.artist);
+
+          commit("addSongs", songs);
+          commit("addAlbums", albums);
+          commit("addArtists", artists);
+          if (res.next) {
+            commit("setNextSongs", 25);
+          }
+        })
+        .finally(() => {
+          commit("setSongsIsLoading", false);
+        });
+    },
+
+    addSongs({ commit }, songs) {
+      commit("addSongs", songs);
     },
     setLibrarySongs({ commit }, songs) {
       commit("setLibrarySongs", songs);
@@ -97,6 +143,9 @@ export default createStore({
     },
     addLibraryAlbums({ commit }, albums) {
       commit("addLibraryAlbums", albums);
+    },
+    setNextSongs({ commit }, next) {
+      commit("setNextSongs", next);
     },
   },
   modules: {},
