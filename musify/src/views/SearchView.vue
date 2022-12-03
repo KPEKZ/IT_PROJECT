@@ -24,6 +24,10 @@
     <v-row class="row rounded-lg row__theme-default">
       <AlbumsList :albums="getAlbums"></AlbumsList>
     </v-row>
+    <v-row> <h3 class="header">Artists</h3></v-row>
+    <v-row class="row rounded-lg row__theme-default">
+      <ArtistsList :artists="artists"></ArtistsList>
+    </v-row>
   </v-container>
 </template>
 
@@ -31,6 +35,7 @@
 import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
+import ArtistsList from "@/components/ArtistsList";
 
 export default {
   name: "SearchView",
@@ -38,9 +43,9 @@ export default {
   data() {
     return {
       query: null,
-      songs: null,
-      albums: null,
-      artists: null,
+      songs: [],
+      albums: [],
+      artists: [],
       nextSongs: undefined,
     };
   },
@@ -48,6 +53,7 @@ export default {
   components: {
     SongsList,
     AlbumsList,
+    ArtistsList,
   },
 
   computed: {
@@ -70,6 +76,13 @@ export default {
   watch: {
     getSongs: function (newSongs) {
       this.songs = newSongs;
+    },
+    getArtists: function (newArtists) {
+      this.artists = newArtists;
+    },
+
+    getAlbums: function (newAlbums) {
+      this.albums = newAlbums;
     },
     getNextSongs: function (newNextSongs) {
       this.nextSongs = newNextSongs;
