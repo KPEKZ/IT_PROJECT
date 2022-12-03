@@ -12,7 +12,7 @@
       </template>
     </v-text-field>
     <v-row class="row"> <h3 class="header">Songs</h3></v-row>
-    <v-row class="row row__theme-default songs">
+    <v-row class="row rounded-lg row__theme-default songs">
       <SongsList
         @load-next-songs="loadNextSongs"
         v-if="songs"
@@ -20,12 +20,17 @@
         :songs="getSongs"
       ></SongsList>
     </v-row>
+    <v-row class="row"> <h3 class="header">Albums</h3></v-row>
+    <v-row class="row rounded-lg row__theme-default">
+      <AlbumsList :albums="getAlbums"></AlbumsList>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
+import AlbumsList from "@/components/AlbumsList";
 
 export default {
   name: "SearchView",
@@ -42,6 +47,7 @@ export default {
 
   components: {
     SongsList,
+    AlbumsList,
   },
 
   computed: {
