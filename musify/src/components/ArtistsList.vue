@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import _ from "lodash";
+import { ClearedList } from "@/helpers/ClearedList.js";
 import ArtistItem from "@/components/ArtistItem";
 
 export default {
@@ -37,34 +37,11 @@ export default {
 
   computed: {
     clearedArtists() {
-      const filteredAlbums = _.uniqBy(this.artists, (album) => album.id);
-      const splitedAlbums = this.splitIntoChunks(filteredAlbums);
-      return splitedAlbums;
+      return ClearedList(this.artists, this.columns);
     },
   },
 
-  methods: {
-    splitIntoChunks(artists) {
-      const splitedAlbums = [];
-      let chunk = [];
-      let albumCount = 0;
-
-      for (let i = 0; i < artists.length; i++) {
-        chunk.push(artists[i]);
-        albumCount++;
-
-        if (albumCount === this.columns) {
-          splitedAlbums.push(chunk);
-          chunk = [];
-          albumCount = 0;
-        }
-      }
-      splitedAlbums.push(chunk);
-      chunk = 0;
-
-      return splitedAlbums;
-    },
-  },
+  methods: {},
 };
 </script>
 
