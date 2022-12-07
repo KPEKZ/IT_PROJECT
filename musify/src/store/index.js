@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import { getAllSongs } from "@/services/SongService";
+import { getRandomWord } from "@/services/RandomWordService";
 
 export default createStore({
   state: {
@@ -8,8 +9,12 @@ export default createStore({
     artists: [],
     librarySongs: [],
     libraryAlbums: [],
+    HomeSongs: [],
+    HomeAlbums: [],
+    HomeArtists: [],
     songsIsLoading: false,
     nextSongs: 0,
+    randomWord: "Ivan",
   },
   getters: {
     getSongs(state) {
@@ -29,6 +34,18 @@ export default createStore({
     },
     getNextSongs(state) {
       return state.nextSongs;
+    },
+    getHomeSongs(state) {
+      return state.HomeSongs;
+    },
+    getHomeAlbums(state) {
+      return state.HomeAlbums;
+    },
+    getHomeArtists(state) {
+      return state.HomeArtists;
+    },
+    getRandomWord(state) {
+      return state.randomWord;
     },
   },
   mutations: {
@@ -81,6 +98,30 @@ export default createStore({
     setNextSongs(state, next) {
       if (next !== null || undefined) state.nextSongs += next;
     },
+    setHomeSongs(state, songs) {
+      state.HomeSongs = songs;
+    },
+    addHomeSongs(state, songs) {
+      if (!Array.isArray(songs)) return;
+      state.HomeSongs.push(...songs);
+    },
+    setHomeAlbums(state, albums) {
+      state.HomeAlbums = albums;
+    },
+    addHomeAlbums(state, albums) {
+      if (!Array.isArray(albums)) return;
+      state.HomeAlbums.push(...albums);
+    },
+    setHomeArtists(state, artists) {
+      state.HomeArtists = artists;
+    },
+    addHomeArtists(state, artists) {
+      if (!Array.isArray(artists)) return;
+      state.HomeArtists.push(...artists);
+    },
+    setRandomWord(state, randomWord) {
+      state.randomWord = randomWord;
+    },
   },
   actions: {
     fetchInitSongs({ commit }, query) {
@@ -121,6 +162,30 @@ export default createStore({
         .finally(() => {
           commit("setSongsIsLoading", false);
         });
+    },
+    fetchInitHomeSongs({ commit }, query) {
+      commit("setSongsIsLoading", true);
+
+      getAllSongs(query)
+        .then((res) => {
+          const songs = res.data;
+          const albums = songs?.map((song) => song.album);
+          const artists = songs?.map((song) => song.artist);
+
+          commit("setHomeSongs", songs);
+          commit("setHomeAlbums", albums);
+          commit("setHomeArtists", artists);
+        })
+        .finally(() => {
+          commit("setSongsIsLoading", false);
+        });
+    },
+
+    fetchRandomWord({ commit }) {
+      getRandomWord().then((res) => {
+        const randomWord = res.toString();
+        commit("setRandomWord", randomWord);
+      });
     },
 
     addSongs({ commit }, songs) {

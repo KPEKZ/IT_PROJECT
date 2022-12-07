@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
@@ -31,6 +32,7 @@ export default {
       albums: [],
       songs: [],
       artists: [],
+      randomWord: "random",
     };
   },
 
@@ -41,20 +43,35 @@ export default {
   },
   computed: {
     getSongs() {
-      return this.$store.getters.getSongs;
+      return this.$store.getters.getHomeSongs;
     },
 
     getAlbums() {
-      return this.$store.getters.getAlbums;
+      return this.$store.getters.getHomeAlbums;
     },
 
     getArtists() {
-      return this.$store.getters.getArtists;
+      return this.$store.getters.getHomeArtists;
     },
   },
-  methods: {},
+  methods: {
+    updateQuery(value) {
+      this.updateValueWithDelay(value);
+    },
+
+    updateValueWithDelay: _debounce(function (value) {
+      this.$store.dispatch("fetchInitHomeSongs", value);
+      this.songs = this.$store.getters.getHomeSongs;
+      this.albums = this.$store.getters.getHomeAlbums;
+      this.artists = this.$store.getters.getHomeArtists;
+    }, 500),
+  },
 
   watch: {
+    getSongs: function (newSongs) {
+      this.songs = newSongs;
+    },
+
     getAlbums: function (newAlbums) {
       this.albums = newAlbums;
     },
@@ -65,9 +82,12 @@ export default {
   },
 
   mounted() {
-    this.albums = this.$store.getters.getAlbums;
-    this.songs = this.$store.getters.getSongs;
-    this.artists = this.$store.getters.getArtists;
+    this.$store.dispatch("fetchRandomWord");
+    this.randomWord = this.$store.getters.getRandomWord;
+    this.updateQuery(this.randomWord);
+    this.albums = this.$store.getters.getHomeAlbums;
+    this.songs = this.$store.getters.getHomeSongs;
+    this.artists = this.$store.getters.getHomeArtists;
   },
 };
 </script>
