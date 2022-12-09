@@ -8,8 +8,12 @@ export default createStore({
     artists: [],
     librarySongs: [],
     libraryAlbums: [],
+    libraryArtists: [],
     songsIsLoading: false,
     nextSongs: 0,
+    currentSong: null,
+    currentSongId: null,
+    isPlaying: false,
   },
   getters: {
     getSongs(state) {
@@ -27,8 +31,20 @@ export default createStore({
     getLibraryAlbums(state) {
       return state.libraryAlbums;
     },
+    getLibraryArtists(state) {
+      return state.libraryArtists;
+    },
     getNextSongs(state) {
       return state.nextSongs;
+    },
+    getCurrentSong(state) {
+      return state.currentSong;
+    },
+    getIsPlaying(state) {
+      return state.isPlaying;
+    },
+    getCurrentSongId(state) {
+      return state.currentSongId;
     },
   },
   mutations: {
@@ -58,7 +74,10 @@ export default createStore({
     },
     setLibrarySongs(state, songs) {
       if (!Array.isArray(songs)) return;
-      state.librarySongs = songs;
+      state.librarySongs = songs.map((song) => {
+        const appId = Symbol.for("appId");
+        return { ...song, [appId]: Math.random() };
+      });
     },
     setLibraryAlbums(state, albums) {
       if (!Array.isArray(albums)) return;
@@ -73,13 +92,48 @@ export default createStore({
     },
     addLibrarySongs(state, songs) {
       if (!Array.isArray(songs)) return;
-      state.librarySongs.push(...songs);
+      const newSongs = songs.map((song) => {
+        const appId = Symbol.for("appId");
+        return { ...song, [appId]: Math.random() };
+      });
+      state.librarySongs.push(...newSongs);
     },
     addLibrarySong(state, song) {
-      state.librarySongs.push(song);
+      const appId = Symbol.for("appId");
+      state.librarySongs.push({ ...song, [appId]: Math.random() });
+    },
+    setLibraryArtists(state, artists) {
+      if (!Array.isArray(artists)) return;
+      state.libraryArtists = artists;
+    },
+    addLibraryArtists(state, artists) {
+      if (!Array.isArray(artists)) return;
+      state.libraryArtists.push(...artists);
+    },
+    addLibraryArtist(state, artist) {
+      state.libraryArtists.push(artist);
     },
     setNextSongs(state, next) {
       if (next !== null || undefined) state.nextSongs += next;
+    },
+    deleteSongFromLibrary(state, song) {
+      const oldLibrarySongs = [...state.librarySongs];
+      const appId = Symbol.for("appId");
+      state.librarySongs = oldLibrarySongs.filter(
+        (s) => s[appId] !== song[appId]
+      );
+    },
+    setCurrentSong(state, song) {
+      state.currentSong = song;
+    },
+
+    setIsPlaying(state, action) {
+      if (typeof action !== "boolean") return;
+      state.isPlaying = action;
+    },
+
+    setCurrentSongId(state, id) {
+      state.currentSongId = id;
     },
   },
   actions: {
@@ -141,11 +195,33 @@ export default createStore({
     addLibrarySongs({ commit }, songs) {
       commit("addLibrarySongs", songs);
     },
+    deleteFromLibrarySong({ commit }, song) {
+      commit("deleteSongFromLibrary", song);
+    },
     addLibraryAlbums({ commit }, albums) {
       commit("addLibraryAlbums", albums);
     },
+    setLibraryArtists({ commit }, artists) {
+      commit("setLibraryArtists", artists);
+    },
+    addLibraryArtists({ commit }, artists) {
+      commit("addLibraryArtists", artists);
+    },
+    addLibraryArtist({ commit }, artist) {
+      commit("addLibraryArtist", artist);
+    },
     setNextSongs({ commit }, next) {
       commit("setNextSongs", next);
+    },
+    setCurrentSong({ commit }, song) {
+      commit("setCurrentSong", song);
+    },
+    setIsPlaying({ commit }, action) {
+      commit("setIsPlaying", action);
+    },
+
+    setCurrentSongId({ commit }, id) {
+      commit("setCurrentSongId", id);
     },
   },
   modules: {},

@@ -29,6 +29,7 @@ export default {
     artists: {
       type: Array,
     },
+    canAddToLibrary: Boolean,
   },
 
   components: {
