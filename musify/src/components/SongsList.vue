@@ -1,6 +1,11 @@
 <template>
   <v-list lines="one" class="list">
-    <SongItem v-for="item in songs" :key="item.id" :song="item"></SongItem>
+    <SongItem
+      v-for="item in songs"
+      :key="item.id"
+      :song="item"
+      :canAddToLibrary="canAddToLibrary"
+    ></SongItem>
     <div v-intersect="onIntersect"></div>
   </v-list>
 </template>
@@ -19,6 +24,7 @@ export default {
     songs: {
       type: Array,
     },
+    canAddToLibrary: Boolean,
   },
   methods: {
     onIntersect(isIntersecting) {

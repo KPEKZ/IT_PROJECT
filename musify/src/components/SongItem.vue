@@ -20,20 +20,146 @@
           ></v-avatar>
         </template>
         <template v-slot:append>
-          <v-btn :icon="'mdi-play-outline'" variant="text"></v-btn>
-          <v-btn :icon="'mdi-menu'" variant="text"></v-btn>
+          <template v-if="thisSongIsPlaying">
+            <v-btn
+              @click="stopSong()"
+              :icon="'mdi-pause'"
+              variant="text"
+            ></v-btn>
+          </template>
+
+          <template v-if="!thisSongIsPlaying">
+            <v-btn
+              @click="playSong(song.preview)"
+              :icon="'mdi-play-outline'"
+              variant="text"
+            ></v-btn>
+          </template>
+
+          <v-menu open-on-hover>
+            <template v-slot:activator="{ props }">
+              <v-btn :icon="'mdi-menu'" variant="text" v-bind="props"></v-btn>
+            </template>
+            <v-list>
+              <template v-if="canAddToLibrary">
+                <v-list-item>
+                  <v-tooltip text="Add to library">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        :icon="'mdi-plus'"
+                        variant="text"
+                        v-bind="props"
+                        @click="onAddToLibrary(song)"
+                      ></v-btn>
+                    </template>
+                  </v-tooltip>
+                </v-list-item>
+              </template>
+
+              <template v-if="!canAddToLibrary">
+                <v-list-item>
+                  <v-tooltip text="Delete from library">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        :icon="'mdi-delete'"
+                        variant="text"
+                        v-bind="props"
+                        @click="onDeleteFromLibrary(song)"
+                      ></v-btn>
+                    </template>
+                  </v-tooltip>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-menu>
         </template>
       </v-list-item>
     </template>
   </v-hover>
+  <v-snackbar v-model="snackBarIsOpened">
+    <span class="mr-3">Song has been added success</span>
+    <v-icon icon="mdi-check-circle-outline" color="success"></v-icon>
+    <template v-slot:actions>
+      <v-btn color="pink" variant="text" @click="snackBarIsOpened = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script>
 export default {
   name: "SongItem",
+  data() {
+    return {
+      snackBarIsOpened: false,
+      thisSongIsPlaying: false,
+    };
+  },
+
   props: {
     song: {
       type: Object,
+    },
+    canAddToLibrary: Boolean,
+  },
+
+  computed: {
+    getCurrentSong() {
+      return this.$store.getters.getCurrentSong;
+    },
+    getCurrentSongId() {
+      return this.$store.getters.getCurrentSongId;
+    },
+  },
+
+  watch: {
+    getCurrentSong: function () {},
+
+    getCurrentSongId: function (newId) {
+      if ((newId !== null || undefined) && newId !== this.song.id) {
+        this.thisSongIsPlaying = false;
+        this.getCurrentSong?.removeEventListener(
+          "ended",
+          this.setSongPlayingToFalse
+        );
+      }
+    },
+  },
+
+  methods: {
+    playSong(src) {
+      this.stopSong();
+      const song = new Audio(src);
+      song.addEventListener("ended", this.setSongPlayingToFalse);
+      this.$store.dispatch("setCurrentSong", song);
+      this.$store.dispatch("setIsPlaying", true);
+      this.$store.dispatch("setCurrentSongId", this.song.id);
+      this.thisSongIsPlaying = true;
+      song.play();
+    },
+
+    stopSong() {
+      const song = this.getCurrentSong;
+      song?.pause();
+      song?.removeEventListener("ended", this.setSongPlayingToFalse);
+      this.$store.dispatch("setCurrentSong", null);
+      this.$store.dispatch("setIsPlaying", false);
+      this.$store.dispatch("setCurrentSongId", null);
+      this.thisSongIsPlaying = false;
+    },
+
+    onAddToLibrary(song) {
+      this.$store.dispatch("addLibrarySong", song);
+      this.snackBarIsOpened = true;
+    },
+
+    onDeleteFromLibrary(song) {
+      this.$store.dispatch("deleteFromLibrarySong", song);
+    },
+
+    setSongPlayingToFalse() {
+      this.thisSongIsPlaying = false;
     },
   },
 };
