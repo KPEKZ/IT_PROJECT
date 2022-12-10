@@ -18,6 +18,7 @@
         v-if="songs"
         class="list__song"
         :songs="getSongs"
+        :canAddToLibrary="true"
       ></SongsList>
     </v-row>
     <v-row class="row"> <h3 class="header">Albums</h3></v-row>
