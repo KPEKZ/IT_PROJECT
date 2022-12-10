@@ -4,7 +4,12 @@
     <v-row class="row rounded-lg">
       <section class="songs">
         <v-list lines="one" class="list">
-          <SongItem v-for="item in songs" :key="item.id" :song="item">
+          <SongItem
+            v-for="item in songs"
+            :key="item.id"
+            :song="item"
+            :canAddToLibrary="true"
+          >
           </SongItem>
           <div v-intersect="onIntersect"></div>
         </v-list>
