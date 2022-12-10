@@ -14,6 +14,7 @@ export default createStore({
     currentSong: null,
     currentSongId: null,
     isPlaying: false,
+    currentSongRef: null,
   },
   getters: {
     getSongs(state) {
@@ -45,6 +46,9 @@ export default createStore({
     },
     getCurrentSongId(state) {
       return state.currentSongId;
+    },
+    getCurrentSongRef(state) {
+      return state.currentSongRef;
     },
   },
   mutations: {
@@ -135,6 +139,9 @@ export default createStore({
     setCurrentSongId(state, id) {
       state.currentSongId = id;
     },
+    setCurrentSongRef(state, song) {
+      state.currentSongRef = song;
+    },
   },
   actions: {
     fetchInitSongs({ commit }, query) {
@@ -222,6 +229,10 @@ export default createStore({
 
     setCurrentSongId({ commit }, id) {
       commit("setCurrentSongId", id);
+    },
+
+    setCurrentSongRef({ commit }, song) {
+      commit("setCurrentSongRef", song);
     },
   },
   modules: {},

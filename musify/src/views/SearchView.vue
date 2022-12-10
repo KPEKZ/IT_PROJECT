@@ -29,6 +29,9 @@
     <v-row class="row rounded-lg row__theme-default">
       <ArtistsList :artists="artists"></ArtistsList>
     </v-row>
+    <v-row class="row rounded">
+      <AudioPlayer></AudioPlayer>
+    </v-row>
   </v-container>
 </template>
 
@@ -37,6 +40,7 @@ import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
+import AudioPlayer from "@/components/AudioPlayer";
 
 export default {
   name: "SearchView",
@@ -55,6 +59,7 @@ export default {
     SongsList,
     AlbumsList,
     ArtistsList,
+    AudioPlayer,
   },
 
   computed: {

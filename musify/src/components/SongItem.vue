@@ -30,7 +30,7 @@
 
           <template v-if="!thisSongIsPlaying">
             <v-btn
-              @click="playSong(song.preview)"
+              @click="playSong(song)"
               :icon="'mdi-play-outline'"
               variant="text"
             ></v-btn>
@@ -128,13 +128,14 @@ export default {
   },
 
   methods: {
-    playSong(src) {
+    playSong(currSong) {
       this.stopSong();
-      const song = new Audio(src);
+      const song = new Audio(currSong.preview);
       song.addEventListener("ended", this.setSongPlayingToFalse);
       this.$store.dispatch("setCurrentSong", song);
       this.$store.dispatch("setIsPlaying", true);
       this.$store.dispatch("setCurrentSongId", this.song.id);
+      this.$store.dispatch("setCurrentSongRef", currSong);
       this.thisSongIsPlaying = true;
       song.play();
     },
@@ -146,6 +147,7 @@ export default {
       this.$store.dispatch("setCurrentSong", null);
       this.$store.dispatch("setIsPlaying", false);
       this.$store.dispatch("setCurrentSongId", null);
+      this.$store.dispatch("setCurrentSongRef", null);
       this.thisSongIsPlaying = false;
     },
 
@@ -161,6 +163,13 @@ export default {
     setSongPlayingToFalse() {
       this.thisSongIsPlaying = false;
     },
+  },
+
+  onmounted() {
+    this.getCurrentSong?.removeEventListener(
+      "ended",
+      this.setSongPlayingToFalse
+    );
   },
 };
 </script>
