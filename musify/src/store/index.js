@@ -16,8 +16,6 @@ export default createStore({
     nextSongs: 0,
     randomWord: "Ivan",
     libraryArtists: [],
-    songsIsLoading: false,
-    nextSongs: 0,
     currentSong: null,
     currentSongId: null,
     isPlaying: false,
