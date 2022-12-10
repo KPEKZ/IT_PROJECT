@@ -4,7 +4,7 @@
       <router-view />
     </v-main>
     <v-bottom-navigation :elevation="0" class="navigation">
-      <router-link to="home" custom v-slot="{ href, isActive }">
+      <router-link to="/home" custom v-slot="{ href, isActive }">
         <v-btn
           :class="[isActive && 'btn-active']"
           :href="href"
@@ -20,7 +20,7 @@
           home
         </v-btn>
       </router-link>
-      <router-link to="search" custom v-slot="{ href, isActive }">
+      <router-link to="/search" custom v-slot="{ href, isActive }">
         <v-btn
           :class="[isActive && 'btn-active']"
           :href="href"
@@ -36,7 +36,7 @@
           search
         </v-btn>
       </router-link>
-      <router-link to="library" custom v-slot="{ href, isActive }">
+      <router-link to="/library" custom v-slot="{ href, isActive }">
         <v-btn
           :class="[isActive && 'btn-active']"
           :href="href"
