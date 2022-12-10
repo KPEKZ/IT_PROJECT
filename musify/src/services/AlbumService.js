@@ -6,7 +6,7 @@ const headerOptions = {
 
 export async function getAllSongsInAlbum(id) {
   let url = API_URL_KEY + id;
-  console.log(url);
+
   try {
     const response = await fetch(url, {
       method: "GET",

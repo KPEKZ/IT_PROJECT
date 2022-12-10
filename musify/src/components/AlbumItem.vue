@@ -1,12 +1,6 @@
 <template>
-  <router-link :to="'album/' + this.item.id">
-    <v-card
-      :elevation="0"
-      v-on:click="showSongs"
-      class="album"
-      width="170"
-      height="215"
-    >
+  <router-link :to="'album/' + this.item.id" class="link">
+    <v-card :elevation="0" class="album" width="170" height="215">
       <v-img cover :src="item?.cover"></v-img>
       <v-card-title>{{ item?.title }}</v-card-title>
       <v-card-text></v-card-text>
@@ -41,6 +35,11 @@ export default {
 .album {
   cursor: pointer;
 }
+
+.link {
+  text-decoration: none;
+}
+
 .album:hover {
   background: #e2e2e2;
 }

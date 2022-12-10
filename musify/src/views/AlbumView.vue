@@ -4,8 +4,8 @@
     <v-row class="row rounded-lg">
       <section class="songs">
         <v-list lines="one" class="list">
-          <SongItemAlbum v-for="item in songs" :key="item.id" :song="item">
-          </SongItemAlbum>
+          <SongItem v-for="item in songs" :key="item.id" :song="item">
+          </SongItem>
           <div v-intersect="onIntersect"></div>
         </v-list>
       </section>
@@ -13,8 +13,8 @@
   </v-container>
 </template>
 <script>
-import SongItemAlbum from "@/components/SongItemAlbum";
 import { getAllSongsInAlbum } from "@/services/AlbumService";
+import SongItem from "@/components/SongItem";
 
 export default {
   data() {
@@ -26,13 +26,20 @@ export default {
   methods: {
     getSongs() {
       getAllSongsInAlbum(this.$route.params.id).then((res) => {
-        this.songs = res.tracks.data;
+        const artistPicture = res.artist?.picture;
+        const tracks = res?.tracks?.data;
+
+        this.songs = tracks.map((track) => {
+          const newTrack = { ...track };
+          track.artist.picture = artistPicture;
+          return newTrack;
+        });
       });
     },
   },
 
   components: {
-    SongItemAlbum,
+    SongItem,
   },
 
   mounted() {
