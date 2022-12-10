@@ -1,25 +1,39 @@
 <template>
   <v-container class="container">
+    <v-card max-width="300">
+      <v-img
+        :src="this.songs[0]?.album.cover_big"
+        height="300px"
+        cover
+        class="align-end text-white"
+      >
+        <v-card-title class="title_text" v-text="this.songs[0]?.album.title">
+        </v-card-title>
+        <v-card-title
+          class="title_text"
+          v-text="this.songs[0]?.artist.name + ', tracks: ' + this.songs.length"
+        >
+        </v-card-title>
+      </v-img>
+    </v-card>
     <v-row> <h3 class="header">Songs</h3></v-row>
     <v-row class="row rounded-lg">
       <section class="songs">
-        <v-list lines="one" class="list">
-          <SongItem
-            v-for="item in songs"
-            :key="item.id"
-            :song="item"
-            :canAddToLibrary="true"
-          >
-          </SongItem>
-          <div v-intersect="onIntersect"></div>
-        </v-list>
+        <SongsList
+          v-if="songs"
+          class="list__song"
+          :songs="songs"
+          :canAddToLibrary="true"
+        >
+        </SongsList>
+        <div v-intersect="onIntersect"></div>
       </section>
     </v-row>
   </v-container>
 </template>
 <script>
 import { getAllSongsInAlbum } from "@/services/AlbumService";
-import SongItem from "@/components/SongItem";
+import SongsList from "@/components/SongsList";
 
 export default {
   data() {
@@ -33,7 +47,6 @@ export default {
       getAllSongsInAlbum(this.$route.params.id).then((res) => {
         const artistPicture = res.artist?.picture;
         const tracks = res?.tracks?.data;
-
         this.songs = tracks.map((track) => {
           const newTrack = { ...track };
           track.artist.picture = artistPicture;
@@ -44,7 +57,7 @@ export default {
   },
 
   components: {
-    SongItem,
+    SongsList,
   },
 
   mounted() {
@@ -74,5 +87,9 @@ export default {
 .album_img {
   height: 150px;
   width: 150px;
+}
+.title_text {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 </style>
