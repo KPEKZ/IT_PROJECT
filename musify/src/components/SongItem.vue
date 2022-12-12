@@ -131,6 +131,7 @@ export default {
     playSong(currSong) {
       this.stopSong();
       const song = new Audio(currSong.preview);
+      song.preload = "metadata";
       song.addEventListener("ended", this.setSongPlayingToFalse);
       this.$store.dispatch("setCurrentSong", song);
       this.$store.dispatch("setIsPlaying", true);
