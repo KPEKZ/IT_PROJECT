@@ -14,7 +14,9 @@ export default createStore({
     HomeArtists: [],
     songsIsLoading: false,
     nextSongs: 0,
-    randomWord: "Ivan",
+    randomWord: getRandomWord().then((res) => {
+      res.toString();
+    }),
     libraryArtists: [],
     currentSong: null,
     currentSongId: null,
