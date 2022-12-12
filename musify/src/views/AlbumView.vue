@@ -1,25 +1,42 @@
 <template>
   <v-container class="container">
-    <v-row> <h3 class="header">Songs</h3></v-row>
-    <v-row class="row rounded-lg">
-      <section class="songs">
-        <v-list lines="one" class="list">
-          <SongItem
-            v-for="item in songs"
-            :key="item.id"
-            :song="item"
-            :canAddToLibrary="true"
+    <v-row class="row justify-center">
+      <v-card max-width="300">
+        <v-img
+          :src="songs[0]?.album.cover_big"
+          height="300px"
+          width="300px"
+          cover
+          class="align-end text-white"
+        >
+          <v-card-title class="title_text" v-text="songs[0]?.album.title">
+          </v-card-title>
+          <v-card-title
+            class="title_text"
+            v-text="songs[0]?.artist.name + ', tracks: ' + songs.length"
           >
-          </SongItem>
-          <div v-intersect="onIntersect"></div>
-        </v-list>
+          </v-card-title>
+        </v-img>
+      </v-card>
+    </v-row>
+    <v-row> <h3 class="header">Songs</h3></v-row>
+    <v-row class="row row__theme_default rounded-lg">
+      <section class="songs">
+        <SongsList
+          v-if="songs"
+          class="list__song"
+          :songs="songs"
+          :canAddToLibrary="true"
+        >
+        </SongsList>
+        <div v-intersect="onIntersect"></div>
       </section>
     </v-row>
   </v-container>
 </template>
 <script>
 import { getAllSongsInAlbum } from "@/services/AlbumService";
-import SongItem from "@/components/SongItem";
+import SongsList from "@/components/SongsList";
 
 export default {
   data() {
@@ -33,8 +50,7 @@ export default {
       getAllSongsInAlbum(this.$route.params.id).then((res) => {
         const artistPicture = res.artist?.picture;
         const tracks = res?.tracks?.data;
-
-        this.songs = tracks.map((track) => {
+        this.songs = tracks?.map((track) => {
           const newTrack = { ...track };
           track.artist.picture = artistPicture;
           return newTrack;
@@ -44,7 +60,7 @@ export default {
   },
 
   components: {
-    SongItem,
+    SongsList,
   },
 
   mounted() {
@@ -54,9 +70,13 @@ export default {
 </script>
 <style scoped>
 .row {
-  box-shadow: 0 0 3px 1px rgba(34, 60, 80, 0.2);
   margin: 0;
 }
+
+.row__theme_default {
+  box-shadow: 0 0 3px 1px rgba(34, 60, 80, 0.2);
+}
+
 .header {
   color: #69686f;
   margin-left: 70px;
@@ -74,5 +94,9 @@ export default {
 .album_img {
   height: 150px;
   width: 150px;
+}
+.title_text {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 </style>

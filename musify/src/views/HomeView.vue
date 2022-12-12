@@ -32,7 +32,7 @@ export default {
       albums: [],
       songs: [],
       artists: [],
-      randomWord: "random",
+      randomWord: "",
     };
   },
 
