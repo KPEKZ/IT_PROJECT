@@ -80,7 +80,6 @@ export default {
       this.artists = newArtists;
     },
   },
-
   mounted() {
     this.$store.dispatch("fetchRandomWord");
     this.randomWord = this.$store.getters.getRandomWord;

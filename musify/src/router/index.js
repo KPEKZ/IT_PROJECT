@@ -26,6 +26,11 @@ const routes = [
     name: "AlbumView",
     component: () => import("../views/AlbumView"),
   },
+  {
+    path: "/artist/:id",
+    name: "ArtistView",
+    component: () => import("../views/ArtistView"),
+  },
 ];
 
 const router = createRouter({
