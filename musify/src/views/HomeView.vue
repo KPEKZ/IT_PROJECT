@@ -13,7 +13,7 @@
     <v-row> <h3 class="header">Songs</h3></v-row>
     <v-row class="row rounded-lg">
       <section class="songs">
-        <SongsList :songs="songs"></SongsList>
+        <SongsList :songs="songs" location="home"></SongsList>
       </section>
     </v-row>
   </v-container>

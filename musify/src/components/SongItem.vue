@@ -102,6 +102,7 @@ export default {
       type: Object,
     },
     canAddToLibrary: Boolean,
+    location: String,
   },
 
   computed: {
@@ -137,6 +138,8 @@ export default {
       this.$store.dispatch("setIsPlaying", true);
       this.$store.dispatch("setCurrentSongId", this.song.id);
       this.$store.dispatch("setCurrentSongRef", currSong);
+      this.$store.dispatch("setCurrentPlayQueue", this.location);
+      this.$store.dispatch("setCurrentSongPos", currSong);
       this.thisSongIsPlaying = true;
       song.play();
     },

@@ -9,6 +9,7 @@ export default createStore({
     artists: [],
     librarySongs: [],
     libraryAlbums: [],
+    libraryArtists: [],
     HomeSongs: [],
     HomeAlbums: [],
     HomeArtists: [],
@@ -17,11 +18,13 @@ export default createStore({
     randomWord: getRandomWord().then((res) => {
       res.toString();
     }),
-    libraryArtists: [],
     currentSong: null,
     currentSongId: null,
     isPlaying: false,
     currentSongRef: null,
+    currentPlayQueue: [],
+    currentSongPos: 0,
+    currentSongLocation: null,
   },
   getters: {
     getSongs(state) {
@@ -68,6 +71,15 @@ export default createStore({
     },
     getCurrentSongRef(state) {
       return state.currentSongRef;
+    },
+    getCurrentPlayQueue(state) {
+      return state.currentPlayQueue;
+    },
+    getCurrentSongPos(state) {
+      return state.currentSongPos;
+    },
+    getCurrentSongLocation(state) {
+      return state.currentSongLocation;
     },
   },
   mutations: {
@@ -185,6 +197,40 @@ export default createStore({
     setCurrentSongRef(state, song) {
       state.currentSongRef = song;
     },
+
+    setCurrentPlayQueue({ state, commit }, location) {
+      switch (location) {
+        case "home":
+          state.currentPlayQueue = [...state.HomeSongs];
+          commit("setCurrentSongLocation", location);
+          break;
+        case "library":
+          state.currentPlayQueue = [...state.librarySongs];
+          commit("setCurrentSongLocation", location);
+          break;
+        case "search":
+          state.currentPlayQueue = [...state.songs];
+          commit("setCurrentSongLocation", location);
+          break;
+        default:
+          state.currentPlayQueue = [];
+          commit("setCurrentSongLocation", null);
+          break;
+      }
+    },
+    setCurrentSongPos(state, songRef) {
+      console.log(songRef);
+      console.log(state.currentPlayQueue);
+      const idx = state.currentPlayQueue
+        .slice()
+        .map((song) => song.id)
+        .indexOf(songRef.id);
+      state.currentSongPos = idx;
+    },
+
+    setCurrentSongLocation(state, location) {
+      state.currentSongLocation = location;
+    },
   },
   actions: {
     fetchInitSongs({ commit }, query) {
@@ -300,6 +346,18 @@ export default createStore({
 
     setCurrentSongRef({ commit }, song) {
       commit("setCurrentSongRef", song);
+    },
+
+    setCurrentPlayQueue({ commit }, location) {
+      commit("setCurrentPlayQueue", location);
+    },
+
+    setCurrentSongPos({ commit }, songRef) {
+      commit("setCurrentSongPos", songRef);
+    },
+
+    setCurrentSongLocation({ commit }, location) {
+      commit("setCurrentSongLocation", location);
     },
   },
   modules: {},
