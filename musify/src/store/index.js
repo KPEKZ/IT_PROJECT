@@ -14,9 +14,7 @@ export default createStore({
     HomeArtists: [],
     songsIsLoading: false,
     nextSongs: 0,
-    randomWord: getRandomWord().then((res) => {
-      res.toString();
-    }),
+    randomWord: "",
     libraryArtists: [],
     currentSong: null,
     currentSongId: null,
@@ -221,6 +219,8 @@ export default createStore({
     },
     fetchInitHomeSongs({ commit }, query) {
       commit("setSongsIsLoading", true);
+
+      if (query.length <= 1) query = this.state.randomWord;
 
       getAllSongs(query)
         .then((res) => {
