@@ -27,6 +27,7 @@
           class="list__song"
           :songs="songs"
           :canAddToLibrary="true"
+          location="album"
         >
         </SongsList>
         <div v-intersect="onIntersect"></div>

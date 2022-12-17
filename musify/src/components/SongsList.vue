@@ -5,6 +5,7 @@
       :key="item.id"
       :song="item"
       :canAddToLibrary="canAddToLibrary"
+      :location="location"
     ></SongItem>
     <div v-intersect="onIntersect"></div>
   </v-list>
@@ -24,6 +25,7 @@ export default {
     songs: {
       type: Array,
     },
+    location: String,
     canAddToLibrary: Boolean,
   },
   methods: {
