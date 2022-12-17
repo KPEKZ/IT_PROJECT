@@ -8,5 +8,5 @@ module.exports = defineConfig({
     },
   },
 
-  publicPath: process.env.NODE_ENV === "production" ? "/IT_PROJECT/musify" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/IT_PROJECT/" : "/",
 });
