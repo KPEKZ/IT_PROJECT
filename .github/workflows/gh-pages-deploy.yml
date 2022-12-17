@@ -1,0 +1,20 @@
+name: Deploy to Github Pages
+on:
+    push:
+      branches:
+        - master
+jobs:
+    gh-pages-deploy:
+      name: Deploying to Github Pages
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v3
+          - uses: actions/setup-node@v3
+            with:
+              node-version: '16.17.1'
+          - name: Install packages
+            run: npm i
+          - name: Set Creds
+            run: git config user.name "eduard.kopylov" && git config user.email "ed_010@mail.ru"
+          - name: Deploy
+            run: npm run deploy
