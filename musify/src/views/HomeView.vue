@@ -1,20 +1,21 @@
 <template>
   <v-container class="container">
     <template v-if="getSongs?.length !== 0 && getSongs">
-      <v-row> <h3 class="header">Albums</h3></v-row>
-      <v-row class="row rounded-lg">
+      <v-row class="row"> <h3 class="header">Albums</h3></v-row>
+      <v-row class="row row__theme-default rounded-lg">
         <AlbumsList :albums="getAlbums"></AlbumsList>
       </v-row>
-      <v-row> <h3 class="header">Artists</h3></v-row>
-      <v-row class="row rounded-lg">
+      <v-row class="row"> <h3 class="header">Artists</h3></v-row>
+      <v-row class="row row__theme-default rounded-lg">
         <section class="songs">
           <ArtistsList :artists="getArtists"></ArtistsList>
         </section>
       </v-row>
-      <v-row> <h3 class="header">Songs</h3></v-row>
-      <v-row class="row rounded-lg">
+      <v-row class="row"> <h3 class="header">Songs</h3></v-row>
+      <v-row class="row row__theme-default rounded-lg">
         <section class="songs">
           <SongsList
+            class="songs-list"
             :songs="getSongs"
             location="home"
             :canAddToLibrary="true"
@@ -76,18 +77,23 @@ export default {
 }
 
 .row {
-  box-shadow: 0 0 3px 1px rgba(34, 60, 80, 0.2);
   margin: 0;
+}
+
+.row__theme-default {
+  box-shadow: 0 0 3px 1px rgba(34, 60, 80, 0.2);
 }
 
 .header {
   color: #69686f;
-  margin-left: 70px;
-  margin-top: 20px;
 }
 
 .songs {
   width: 100%;
+}
+
+.songs-list {
+  height: 600px;
 }
 
 .container {
