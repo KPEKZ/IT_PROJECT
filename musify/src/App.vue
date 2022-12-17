@@ -103,4 +103,12 @@ export default {
 .title {
   color: #fff;
 }
+
+.main {
+  overflow: auto;
+}
+
+html {
+  overflow: auto;
+}
 </style>
