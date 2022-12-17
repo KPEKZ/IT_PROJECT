@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "sh deploy.sh"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
