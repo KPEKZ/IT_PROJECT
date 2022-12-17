@@ -11,28 +11,27 @@
         <v-icon icon="mdi-magnify"></v-icon>
       </template>
     </v-text-field>
-    <v-row class="row"> <h3 class="header">Songs</h3></v-row>
-    <v-row class="row rounded-lg row__theme-default songs">
-      <SongsList
-        @load-next-songs="loadNextSongs"
-        v-if="songs"
-        class="list__song"
-        :songs="getSongs"
-        :canAddToLibrary="true"
-        location="search"
-      ></SongsList>
-    </v-row>
-    <v-row class="row"> <h3 class="header">Albums</h3></v-row>
-    <v-row class="row rounded-lg row__theme-default">
-      <AlbumsList :albums="getAlbums"></AlbumsList>
-    </v-row>
-    <v-row> <h3 class="header">Artists</h3></v-row>
-    <v-row class="row rounded-lg row__theme-default">
-      <ArtistsList :artists="artists"></ArtistsList>
-    </v-row>
-    <v-row class="row rounded">
-      <AudioPlayer></AudioPlayer>
-    </v-row>
+    <template v-if="getSongs?.length !== 0">
+      <v-row class="row"> <h3 class="header">Songs</h3></v-row>
+      <v-row class="row rounded-lg row__theme-default songs">
+        <SongsList
+          @load-next-songs="loadNextSongs"
+          v-if="songs"
+          class="list__song"
+          :songs="getSongs"
+          :canAddToLibrary="true"
+          location="search"
+        ></SongsList>
+      </v-row>
+      <v-row class="row"> <h3 class="header">Albums</h3></v-row>
+      <v-row class="row rounded-lg row__theme-default">
+        <AlbumsList :albums="getAlbums"></AlbumsList>
+      </v-row>
+      <v-row class="row"> <h3 class="header">Artists</h3></v-row>
+      <v-row class="row rounded-lg row__theme-default">
+        <ArtistsList :artists="artists"></ArtistsList>
+      </v-row>
+    </template>
   </v-container>
 </template>
 
@@ -41,7 +40,6 @@ import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
-import AudioPlayer from "@/components/AudioPlayer";
 
 export default {
   name: "SearchView",
@@ -60,7 +58,6 @@ export default {
     SongsList,
     AlbumsList,
     ArtistsList,
-    AudioPlayer,
   },
 
   computed: {

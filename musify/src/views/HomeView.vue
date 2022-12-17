@@ -1,26 +1,31 @@
 <template>
   <v-container class="container">
-    <v-row> <h3 class="header">Albums</h3></v-row>
-    <v-row class="row rounded-lg">
-      <AlbumsList :albums="getAlbums"></AlbumsList>
-    </v-row>
-    <v-row> <h3 class="header">Artists</h3></v-row>
-    <v-row class="row rounded-lg">
-      <section class="songs">
-        <ArtistsList :artists="artists"></ArtistsList>
-      </section>
-    </v-row>
-    <v-row> <h3 class="header">Songs</h3></v-row>
-    <v-row class="row rounded-lg">
-      <section class="songs">
-        <SongsList :songs="songs" location="home"></SongsList>
-      </section>
-    </v-row>
+    <template v-if="getSongs?.length !== 0 && getSongs">
+      <v-row> <h3 class="header">Albums</h3></v-row>
+      <v-row class="row rounded-lg">
+        <AlbumsList :albums="getAlbums"></AlbumsList>
+      </v-row>
+      <v-row> <h3 class="header">Artists</h3></v-row>
+      <v-row class="row rounded-lg">
+        <section class="songs">
+          <ArtistsList :artists="getArtists"></ArtistsList>
+        </section>
+      </v-row>
+      <v-row> <h3 class="header">Songs</h3></v-row>
+      <v-row class="row rounded-lg">
+        <section class="songs">
+          <SongsList
+            :songs="getSongs"
+            location="home"
+            :canAddToLibrary="true"
+          ></SongsList>
+        </section>
+      </v-row>
+    </template>
   </v-container>
 </template>
 
 <script>
-import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
@@ -54,40 +59,11 @@ export default {
       return this.$store.getters.getHomeArtists;
     },
   },
-  methods: {
-    updateQuery(value) {
-      this.updateValueWithDelay(value);
-    },
-
-    updateValueWithDelay: _debounce(function (value) {
-      this.$store.dispatch("fetchInitHomeSongs", value);
-      this.songs = this.$store.getters.getHomeSongs;
-      this.albums = this.$store.getters.getHomeAlbums;
-      this.artists = this.$store.getters.getHomeArtists;
-    }, 500),
-  },
-
-  watch: {
-    getSongs: function (newSongs) {
-      this.songs = newSongs;
-    },
-
-    getAlbums: function (newAlbums) {
-      this.albums = newAlbums;
-    },
-
-    getArtists: function (newArtists) {
-      this.artists = newArtists;
-    },
-  },
 
   mounted() {
     this.$store.dispatch("fetchRandomWord");
     this.randomWord = this.$store.getters.getRandomWord;
-    this.updateQuery(this.randomWord);
-    this.albums = this.$store.getters.getHomeAlbums;
-    this.songs = this.$store.getters.getHomeSongs;
-    this.artists = this.$store.getters.getHomeArtists;
+    this.$store.dispatch("fetchInitHomeSongs", this.randomWord);
   },
 };
 </script>

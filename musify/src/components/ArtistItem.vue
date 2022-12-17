@@ -1,9 +1,11 @@
 <template>
-  <v-card :elevation="0" class="artist" width="170" height="215">
-    <v-img cover :src="item?.picture"></v-img>
-    <v-card-title>{{ item?.name }}</v-card-title>
-    <v-card-text></v-card-text>
-  </v-card>
+  <router-link :to="'artist/' + this.item.id" class="link">
+    <v-card :elevation="0" class="artist" width="170" height="215">
+      <v-img cover :src="item?.picture"></v-img>
+      <v-card-title>{{ item?.name }}</v-card-title>
+      <v-card-text></v-card-text>
+    </v-card>
+  </router-link>
 </template>
 
 <script>
@@ -29,5 +31,17 @@ export default {
 .v-card {
   min-width: 170px;
   min-height: 215px;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.artist:hover {
+  background: #e2e2e2;
+}
+
+.artist {
+  cursor: pointer;
 }
 </style>

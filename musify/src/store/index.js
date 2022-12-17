@@ -15,16 +15,13 @@ export default createStore({
     HomeArtists: [],
     songsIsLoading: false,
     nextSongs: 0,
-    randomWord: getRandomWord().then((res) => {
-      res.toString();
-    }),
-    currentSong: null,
-    currentSongId: null,
+    randomWord: "",
+    currentSongDto: null,
+    currentSongAudio: null,
     isPlaying: false,
-    currentSongRef: null,
-    currentPlayQueue: [],
     currentSongPos: 0,
     currentSongLocation: null,
+    currentPlayQueue: [],
   },
   getters: {
     getSongs(state) {
@@ -60,17 +57,17 @@ export default createStore({
     getRandomWord(state) {
       return state.randomWord;
     },
-    getCurrentSong(state) {
-      return state.currentSong;
+    getCurrentSongAudio(state) {
+      return state.currentSongAudio;
     },
     getIsPlaying(state) {
       return state.isPlaying;
     },
     getCurrentSongId(state) {
-      return state.currentSongId;
+      return state.currentSongDto?.id;
     },
-    getCurrentSongRef(state) {
-      return state.currentSongRef;
+    getCurrentSongDto(state) {
+      return state.currentSongDto;
     },
     getCurrentPlayQueue(state) {
       return state.currentPlayQueue;
@@ -182,8 +179,13 @@ export default createStore({
         (s) => s[appId] !== song[appId]
       );
     },
-    setCurrentSong(state, song) {
-      state.currentSong = song;
+
+    setCurrentSongAudio(state, songAudio) {
+      state.currentSongAudio = songAudio;
+    },
+
+    setCurrentSongDto(state, songDto) {
+      state.currentSongDto = songDto;
     },
 
     setIsPlaying(state, action) {
@@ -191,41 +193,27 @@ export default createStore({
       state.isPlaying = action;
     },
 
-    setCurrentSongId(state, id) {
-      state.currentSongId = id;
-    },
-    setCurrentSongRef(state, song) {
-      state.currentSongRef = song;
-    },
-
-    setCurrentPlayQueue({ state, commit }, location) {
+    setCurrentPlayQueue(state, location) {
       switch (location) {
         case "home":
           state.currentPlayQueue = [...state.HomeSongs];
-          commit("setCurrentSongLocation", location);
           break;
         case "library":
           state.currentPlayQueue = [...state.librarySongs];
-          commit("setCurrentSongLocation", location);
           break;
         case "search":
           state.currentPlayQueue = [...state.songs];
-          commit("setCurrentSongLocation", location);
           break;
         default:
           state.currentPlayQueue = [];
-          commit("setCurrentSongLocation", null);
           break;
       }
     },
     setCurrentSongPos(state, songRef) {
-      console.log(songRef);
-      console.log(state.currentPlayQueue);
-      const idx = state.currentPlayQueue
+      state.currentSongPos = state.currentPlayQueue
         .slice()
         .map((song) => song.id)
         .indexOf(songRef.id);
-      state.currentSongPos = idx;
     },
 
     setCurrentSongLocation(state, location) {
@@ -275,6 +263,8 @@ export default createStore({
     fetchInitHomeSongs({ commit }, query) {
       commit("setSongsIsLoading", true);
 
+      if (query.length <= 1) query = this.state.randomWord;
+
       getAllSongs(query)
         .then((res) => {
           const songs = res.data;
@@ -292,8 +282,7 @@ export default createStore({
 
     fetchRandomWord({ commit }) {
       getRandomWord().then((res) => {
-        const randomWord = res.toString();
-        commit("setRandomWord", randomWord);
+        commit("setRandomWord", res.word);
       });
     },
 
@@ -333,27 +322,24 @@ export default createStore({
     setNextSongs({ commit }, next) {
       commit("setNextSongs", next);
     },
-    setCurrentSong({ commit }, song) {
-      commit("setCurrentSong", song);
+    setCurrentSongAudio({ commit }, songAudio) {
+      commit("setCurrentSongAudio", songAudio);
     },
+
+    setCurrentSongDto({ commit }, songDto) {
+      commit("setCurrentSongDto", songDto);
+    },
+
     setIsPlaying({ commit }, action) {
       commit("setIsPlaying", action);
-    },
-
-    setCurrentSongId({ commit }, id) {
-      commit("setCurrentSongId", id);
-    },
-
-    setCurrentSongRef({ commit }, song) {
-      commit("setCurrentSongRef", song);
     },
 
     setCurrentPlayQueue({ commit }, location) {
       commit("setCurrentPlayQueue", location);
     },
 
-    setCurrentSongPos({ commit }, songRef) {
-      commit("setCurrentSongPos", songRef);
+    setCurrentSongPos({ commit }, songDto) {
+      commit("setCurrentSongPos", songDto);
     },
 
     setCurrentSongLocation({ commit }, location) {

@@ -1,6 +1,20 @@
 <template>
   <v-app>
-    <v-main>
+    <v-card class="card position-fixed w-100" elevation="2" rounded="0">
+      <v-toolbar color="#fd516b">
+        <template v-slot:prepend>
+          <v-img
+            width="64px"
+            height="64px"
+            src="./assets/app_logo_2.svg"
+          ></v-img>
+        </template>
+        <v-toolbar-title class="title">Musify</v-toolbar-title>
+        <AudioPlayer></AudioPlayer>
+        <v-spacer></v-spacer>
+      </v-toolbar>
+    </v-card>
+    <v-main class="main mt-xl-15 mt-sm-15 mt-lg-15">
       <router-view />
     </v-main>
     <v-bottom-navigation :elevation="0" class="navigation">
@@ -57,8 +71,11 @@
 </template>
 
 <script>
+import AudioPlayer from "@/components/AudioPlayer";
+
 export default {
   name: "App",
+  components: { AudioPlayer },
 
   data: () => ({
     //
@@ -77,5 +94,13 @@ export default {
 
 .btn-active {
   color: #fd516b;
+}
+
+.card {
+  z-index: 10;
+}
+
+.title {
+  color: #fff;
 }
 </style>
