@@ -21,6 +21,16 @@ const routes = [
     name: "SearchView",
     component: () => import("../views/SearchView"),
   },
+  {
+    path: "/album/:id",
+    name: "AlbumView",
+    component: () => import("../views/AlbumView"),
+  },
+  {
+    path: "/artist/:id",
+    name: "ArtistView",
+    component: () => import("../views/ArtistView"),
+  },
 ];
 
 const router = createRouter({
