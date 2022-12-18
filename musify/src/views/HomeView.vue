@@ -8,7 +8,10 @@
       <v-row class="row"> <h3 class="header">Artists</h3></v-row>
       <v-row class="row row__theme-default rounded-lg">
         <section class="songs">
-          <ArtistsList :artists="getArtists"></ArtistsList>
+          <ArtistsList
+            :artists="getArtists"
+            :canAddToLibrary="true"
+          ></ArtistsList>
         </section>
       </v-row>
       <v-row class="row"> <h3 class="header">Songs</h3></v-row>

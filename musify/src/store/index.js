@@ -118,10 +118,6 @@ export default createStore({
         return { ...album, [appId]: Math.random() };
       });
     },
-    addLibraryAlbum(state, album) {
-      const appId = Symbol.for("appId");
-      state.libraryAlbums.push({ ...album, [appId]: Math.random() });
-    },
     addLibraryAlbums(state, albums) {
       if (!Array.isArray(albums)) return;
       const newAlbums = albums.map((album) => {
@@ -129,6 +125,10 @@ export default createStore({
         return { ...album, [appId]: Math.random() };
       });
       state.libraryAlbums.push(...newAlbums);
+    },
+    addLibraryAlbum(state, album) {
+      const appId = Symbol.for("appId");
+      state.libraryAlbums.push({ ...album, [appId]: Math.random() });
     },
     addLibrarySongs(state, songs) {
       if (!Array.isArray(songs)) return;
@@ -148,10 +148,15 @@ export default createStore({
     },
     addLibraryArtists(state, artists) {
       if (!Array.isArray(artists)) return;
-      state.libraryArtists.push(...artists);
+      const newAlbums = artists.map((artist) => {
+        const appId = Symbol.for("appId");
+        return { ...artist, [appId]: Math.random() };
+      });
+      state.libraryArtists.push(...newAlbums);
     },
     addLibraryArtist(state, artist) {
-      state.libraryArtists.push(artist);
+      const appId = Symbol.for("appId");
+      state.libraryArtists.push({ ...artist, [appId]: Math.random() });
     },
     setNextSongs(state, next) {
       if (next !== null || undefined) state.nextSongs += next;
@@ -193,6 +198,14 @@ export default createStore({
       const appId = Symbol.for("appId");
       state.libraryAlbums = oldLibraryAlbums.filter(
         (s) => s[appId] !== album[appId]
+      );
+    },
+
+    deleteArtistFromLibrary(state, artist) {
+      const oldLibraryArtist = [...state.libraryArtists];
+      const appId = Symbol.for("appId");
+      state.libraryArtists = oldLibraryArtist.filter(
+        (s) => s[appId] !== artist[appId]
       );
     },
 
@@ -325,6 +338,9 @@ export default createStore({
     },
     deleteFromLibraryAlbum({ commit }, album) {
       commit("deleteAlbumFromLibrary", album);
+    },
+    deleteFromLibraryArtist({ commit }, artist) {
+      commit("deleteArtistFromLibrary", artist);
     },
     addLibraryAlbums({ commit }, albums) {
       commit("addLibraryAlbums", albums);
