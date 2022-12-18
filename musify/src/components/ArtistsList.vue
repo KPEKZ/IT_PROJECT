@@ -5,7 +5,10 @@
         <v-row class="carousel-row">
           <template :key="i" v-for="(artist, i) in artistChunk">
             <v-col class="carousel-col">
-              <ArtistItem :item="artist"></ArtistItem>
+              <ArtistItem
+                :artist="artist"
+                :canAddToLibrary="canAddToLibrary"
+              ></ArtistItem>
             </v-col>
           </template>
         </v-row>

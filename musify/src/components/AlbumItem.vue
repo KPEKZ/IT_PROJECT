@@ -47,10 +47,24 @@
       </template>
     </v-list>
   </v-menu>
+  <v-snackbar v-model="snackBarIsOpened">
+    <span class="mr-3">Album has been added success</span>
+    <v-icon icon="mdi-check-circle-outline" color="success"></v-icon>
+    <template v-slot:actions>
+      <v-btn color="pink" variant="text" @click="snackBarIsOpened = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 <script>
 export default {
   name: "AlbumItem",
+  data() {
+    return {
+      snackBarIsOpened: false,
+    };
+  },
   props: {
     album: {
       type: Object,
@@ -64,6 +78,7 @@ export default {
   methods: {
     onAddToLibrary(album) {
       this.$store.dispatch("addLibraryAlbum", album);
+      this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(album) {
