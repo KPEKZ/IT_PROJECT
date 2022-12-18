@@ -19,7 +19,11 @@
       <v-row> <h3 class="header">Songs</h3></v-row>
       <v-row class="row row__theme_default rounded-lg">
         <section class="songs">
-          <SongsList :songs="getSongs" :canAddToLibrary="false"></SongsList>
+          <SongsList
+            :songs="getSongs"
+            :canAddToLibrary="false"
+            location="library"
+          ></SongsList>
         </section>
       </v-row>
     </template>

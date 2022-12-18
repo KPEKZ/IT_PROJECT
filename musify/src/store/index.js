@@ -9,16 +9,19 @@ export default createStore({
     artists: [],
     librarySongs: [],
     libraryAlbums: [],
+    libraryArtists: [],
     HomeSongs: [],
     HomeAlbums: [],
     HomeArtists: [],
     songsIsLoading: false,
     nextSongs: 0,
     randomWord: "",
-    libraryArtists: [],
-    currentSong: null,
-    currentSongId: null,
+    currentSongDto: null,
+    currentSongAudio: null,
     isPlaying: false,
+    currentSongPos: 0,
+    currentSongLocation: null,
+    currentPlayQueue: [],
   },
   getters: {
     getSongs(state) {
@@ -54,14 +57,26 @@ export default createStore({
     getRandomWord(state) {
       return state.randomWord;
     },
-    getCurrentSong(state) {
-      return state.currentSong;
+    getCurrentSongAudio(state) {
+      return state.currentSongAudio;
     },
     getIsPlaying(state) {
       return state.isPlaying;
     },
     getCurrentSongId(state) {
-      return state.currentSongId;
+      return state.currentSongDto?.id;
+    },
+    getCurrentSongDto(state) {
+      return state.currentSongDto;
+    },
+    getCurrentPlayQueue(state) {
+      return state.currentPlayQueue;
+    },
+    getCurrentSongPos(state) {
+      return state.currentSongPos;
+    },
+    getCurrentSongLocation(state) {
+      return state.currentSongLocation;
     },
   },
   mutations: {
@@ -172,6 +187,7 @@ export default createStore({
         (s) => s[appId] !== song[appId]
       );
     },
+
     deleteAlbumFromLibrary(state, album) {
       const oldLibraryAlbums = [...state.libraryAlbums];
       const appId = Symbol.for("appId");
@@ -179,8 +195,13 @@ export default createStore({
         (s) => s[appId] !== album[appId]
       );
     },
-    setCurrentSong(state, song) {
-      state.currentSong = song;
+
+    setCurrentSongAudio(state, songAudio) {
+      state.currentSongAudio = songAudio;
+    },
+
+    setCurrentSongDto(state, songDto) {
+      state.currentSongDto = songDto;
     },
 
     setIsPlaying(state, action) {
@@ -188,8 +209,31 @@ export default createStore({
       state.isPlaying = action;
     },
 
-    setCurrentSongId(state, id) {
-      state.currentSongId = id;
+    setCurrentPlayQueue(state, location) {
+      switch (location) {
+        case "home":
+          state.currentPlayQueue = [...state.HomeSongs];
+          break;
+        case "library":
+          state.currentPlayQueue = [...state.librarySongs];
+          break;
+        case "search":
+          state.currentPlayQueue = [...state.songs];
+          break;
+        default:
+          state.currentPlayQueue = [];
+          break;
+      }
+    },
+    setCurrentSongPos(state, songRef) {
+      state.currentSongPos = state.currentPlayQueue
+        .slice()
+        .map((song) => song.id)
+        .indexOf(songRef.id);
+    },
+
+    setCurrentSongLocation(state, location) {
+      state.currentSongLocation = location;
     },
   },
   actions: {
@@ -254,8 +298,7 @@ export default createStore({
 
     fetchRandomWord({ commit }) {
       getRandomWord().then((res) => {
-        const randomWord = res.toString();
-        commit("setRandomWord", randomWord);
+        commit("setRandomWord", res.word);
       });
     },
 
@@ -298,15 +341,28 @@ export default createStore({
     setNextSongs({ commit }, next) {
       commit("setNextSongs", next);
     },
-    setCurrentSong({ commit }, song) {
-      commit("setCurrentSong", song);
+    setCurrentSongAudio({ commit }, songAudio) {
+      commit("setCurrentSongAudio", songAudio);
     },
+
+    setCurrentSongDto({ commit }, songDto) {
+      commit("setCurrentSongDto", songDto);
+    },
+
     setIsPlaying({ commit }, action) {
       commit("setIsPlaying", action);
     },
 
-    setCurrentSongId({ commit }, id) {
-      commit("setCurrentSongId", id);
+    setCurrentPlayQueue({ commit }, location) {
+      commit("setCurrentPlayQueue", location);
+    },
+
+    setCurrentSongPos({ commit }, songDto) {
+      commit("setCurrentSongPos", songDto);
+    },
+
+    setCurrentSongLocation({ commit }, location) {
+      commit("setCurrentSongLocation", location);
     },
   },
   modules: {},

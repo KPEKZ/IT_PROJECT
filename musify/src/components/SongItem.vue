@@ -6,6 +6,7 @@
         class="song"
         :title="song.title"
         :subtitle="song.artist.name"
+        :active="sameSongFromStore"
         :style="
           isHovering
             ? { backgroundColor: '#e2e2e2' }
@@ -20,17 +21,17 @@
           ></v-avatar>
         </template>
         <template v-slot:append>
-          <template v-if="thisSongIsPlaying">
+          <template v-if="songIsPlaying">
             <v-btn
               @click="stopSong()"
-              :icon="'mdi-pause'"
+              :icon="'mdi-stop'"
               variant="text"
             ></v-btn>
           </template>
 
-          <template v-if="!thisSongIsPlaying">
+          <template v-if="!songIsPlaying">
             <v-btn
-              @click="playSong(song.preview)"
+              @click="playSong(song)"
               :icon="'mdi-play-outline'"
               variant="text"
             ></v-btn>
@@ -77,7 +78,7 @@
     </template>
   </v-hover>
   <v-snackbar v-model="snackBarIsOpened">
-    <span class="mr-3">Song has been added success</span>
+    <span class="mr-3">SongStoreStruct has been added success</span>
     <v-icon icon="mdi-check-circle-outline" color="success"></v-icon>
     <template v-slot:actions>
       <v-btn color="pink" variant="text" @click="snackBarIsOpened = false">
@@ -93,7 +94,8 @@ export default {
   data() {
     return {
       snackBarIsOpened: false,
-      thisSongIsPlaying: false,
+      songIsPlaying: false,
+      sameSongFromStore: false,
     };
   },
 
@@ -102,11 +104,12 @@ export default {
       type: Object,
     },
     canAddToLibrary: Boolean,
+    location: String,
   },
 
   computed: {
-    getCurrentSong() {
-      return this.$store.getters.getCurrentSong;
+    getCurrentSongAudio() {
+      return this.$store.getters.getCurrentSongAudio;
     },
     getCurrentSongId() {
       return this.$store.getters.getCurrentSongId;
@@ -114,39 +117,47 @@ export default {
   },
 
   watch: {
-    getCurrentSong: function () {},
-
     getCurrentSongId: function (newId) {
       if ((newId !== null || undefined) && newId !== this.song.id) {
-        this.thisSongIsPlaying = false;
-        this.getCurrentSong?.removeEventListener(
-          "ended",
-          this.setSongPlayingToFalse
-        );
+        this.songIsPlaying = false;
+        this.sameSongFromStore = false;
+      }
+      if ((newId !== null || undefined) && newId === this.song.id) {
+        this.sameSongFromStore = true;
+      }
+    },
+
+    getCurrentSongAudio: function (newAudio, oldAudio) {
+      if (oldAudio) {
+        newAudio.removeEventListener("ended", this.setSongPlayingToFalse);
+        newAudio.removeEventListener("play", this.setSongPlayingToTrue);
+      }
+      if (newAudio) {
+        newAudio.addEventListener("ended", this.setSongPlayingToFalse);
+        newAudio.addEventListener("play", this.setSongPlayingToTrue);
       }
     },
   },
 
   methods: {
-    playSong(src) {
+    playSong(currSong) {
       this.stopSong();
-      const song = new Audio(src);
-      song.addEventListener("ended", this.setSongPlayingToFalse);
-      this.$store.dispatch("setCurrentSong", song);
+      const songAudio = new Audio(currSong.preview);
+      songAudio.preload = "metadata";
+      this.$store.dispatch("setCurrentSongDto", currSong);
+      this.$store.dispatch("setCurrentSongAudio", songAudio);
       this.$store.dispatch("setIsPlaying", true);
-      this.$store.dispatch("setCurrentSongId", this.song.id);
-      this.thisSongIsPlaying = true;
-      song.play();
+      this.$store.dispatch("setCurrentPlayQueue", this.location);
+      this.$store.dispatch("setCurrentSongLocation", this.location);
+      this.$store.dispatch("setCurrentSongPos", currSong);
+      this.songIsPlaying = true;
+      songAudio.play();
     },
 
     stopSong() {
-      const song = this.getCurrentSong;
-      song?.pause();
-      song?.removeEventListener("ended", this.setSongPlayingToFalse);
-      this.$store.dispatch("setCurrentSong", null);
+      this.getCurrentSongAudio?.pause();
       this.$store.dispatch("setIsPlaying", false);
-      this.$store.dispatch("setCurrentSongId", null);
-      this.thisSongIsPlaying = false;
+      this.songIsPlaying = false;
     },
 
     onAddToLibrary(song) {
@@ -159,7 +170,10 @@ export default {
     },
 
     setSongPlayingToFalse() {
-      this.thisSongIsPlaying = false;
+      this.songIsPlaying = false;
+    },
+    setSongPlayingToTrue() {
+      if (this.sameSongFromStore) this.songIsPlaying = true;
     },
   },
 };
