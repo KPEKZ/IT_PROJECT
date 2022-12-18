@@ -8,11 +8,18 @@
       :location="location"
     ></SongItem>
     <div v-intersect="onIntersect"></div>
+    <ClipLoader
+      class="loader"
+      :loading="getSongsInListLoading"
+      color="#fe7e91"
+      size="100px"
+    ></ClipLoader>
   </v-list>
 </template>
 
 <script>
 import SongItem from "@/components/SongItem";
+import ClipLoader from "vue-spinner/src/ClipLoader";
 
 export default {
   name: "SongsList",
@@ -28,13 +35,22 @@ export default {
     location: String,
     canAddToLibrary: Boolean,
   },
+
+  components: {
+    SongItem,
+    ClipLoader,
+  },
+
   methods: {
     onIntersect(isIntersecting) {
       this.isIntersecting = isIntersecting;
     },
   },
-  components: {
-    SongItem,
+
+  computed: {
+    getSongsInListLoading() {
+      return this.$store.getters.getSongsInListLoading;
+    },
   },
 
   watch: {

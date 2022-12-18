@@ -23,6 +23,12 @@
         </section>
       </v-row>
     </template>
+    <ClipLoader
+      class="loader"
+      :loading="getSongsIsLoading"
+      color="#fe7e91"
+      size="100px"
+    ></ClipLoader>
   </v-container>
 </template>
 
@@ -30,6 +36,7 @@
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
+import ClipLoader from "vue-spinner/src/ClipLoader";
 
 export default {
   name: "LibraryView",
@@ -46,6 +53,7 @@ export default {
     SongsList,
     AlbumsList,
     ArtistsList,
+    ClipLoader,
   },
   computed: {
     getSongs() {
@@ -58,6 +66,16 @@ export default {
 
     getArtists() {
       return this.$store.getters.getHomeArtists;
+    },
+
+    getSongsIsLoading() {
+      return this.$store.getters.getSongsIsLoading;
+    },
+  },
+
+  watch: {
+    getSongsIsLoading: function (value) {
+      console.log(value);
     },
   },
 
@@ -101,5 +119,12 @@ export default {
   gap: 20px;
   flex-flow: column;
   padding: 50px 0 50px 0;
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

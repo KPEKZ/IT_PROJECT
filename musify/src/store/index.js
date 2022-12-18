@@ -14,6 +14,7 @@ export default createStore({
     HomeAlbums: [],
     HomeArtists: [],
     songsIsLoading: false,
+    songsInListsLoading: false,
     nextSongs: 0,
     randomWord: "",
     currentSongDto: null,
@@ -78,6 +79,12 @@ export default createStore({
     getCurrentSongLocation(state) {
       return state.currentSongLocation;
     },
+    getSongsIsLoading(state) {
+      return state.songsIsLoading;
+    },
+    getSongsInListLoading(state) {
+      return state.songsInListsLoading;
+    },
   },
   mutations: {
     setSongs(state, songs) {
@@ -103,6 +110,9 @@ export default createStore({
     },
     setSongsIsLoading(state, value) {
       state.songsIsLoading = value;
+    },
+    setSongsInListLoading(state, value) {
+      state.songsInListsLoading = value;
     },
     setLibrarySongs(state, songs) {
       if (!Array.isArray(songs)) return;
@@ -235,13 +245,17 @@ export default createStore({
           if (res.next) {
             commit("setNextSongs", 25);
           }
+
+          if (res.error.code === 4) {
+            console.log(res.error);
+          }
         })
         .finally(() => {
           commit("setSongsIsLoading", false);
         });
     },
     fetchNextSongs({ commit, state }, query) {
-      commit("setSongsIsLoading", true);
+      commit("setSongsInListLoading", true);
 
       getAllSongs(query, state.nextSongs)
         .then((res) => {
@@ -257,7 +271,7 @@ export default createStore({
           }
         })
         .finally(() => {
-          commit("setSongsIsLoading", false);
+          commit("setSongsInListLoading", false);
         });
     },
     fetchInitHomeSongs({ commit }, query) {
@@ -274,10 +288,9 @@ export default createStore({
           commit("setHomeSongs", songs);
           commit("setHomeAlbums", albums);
           commit("setHomeArtists", artists);
-        })
-        .finally(() => {
           commit("setSongsIsLoading", false);
-        });
+        })
+        .finally(() => {});
     },
 
     fetchRandomWord({ commit }) {
@@ -344,6 +357,14 @@ export default createStore({
 
     setCurrentSongLocation({ commit }, location) {
       commit("setCurrentSongLocation", location);
+    },
+
+    setSongsIsLoading({ commit }, state) {
+      commit("setSongsIsLoading", state);
+    },
+
+    setSongsIsListLoading({ commit }, state) {
+      commit("setSongsIsLoading", state);
     },
   },
   modules: {},
