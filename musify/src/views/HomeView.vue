@@ -3,7 +3,7 @@
     <template v-if="getSongs?.length !== 0 && getSongs">
       <v-row class="row"> <h3 class="header">Albums</h3></v-row>
       <v-row class="row row__theme-default rounded-lg">
-        <AlbumsList :albums="getAlbums"></AlbumsList>
+        <AlbumsList :albums="getAlbums" :canAddToLibrary="true"></AlbumsList>
       </v-row>
       <v-row class="row"> <h3 class="header">Artists</h3></v-row>
       <v-row class="row row__theme-default rounded-lg">
