@@ -113,14 +113,22 @@ export default createStore({
     },
     setLibraryAlbums(state, albums) {
       if (!Array.isArray(albums)) return;
-      state.libraryAlbums = albums;
-    },
-    addLibraryAlbum(state, album) {
-      state.librarySongs.push(album);
+      state.libraryAlbums = albums.map((album) => {
+        const appId = Symbol.for("appId");
+        return { ...album, [appId]: Math.random() };
+      });
     },
     addLibraryAlbums(state, albums) {
       if (!Array.isArray(albums)) return;
-      state.librarySongs.push(...albums);
+      const newAlbums = albums.map((album) => {
+        const appId = Symbol.for("appId");
+        return { ...album, [appId]: Math.random() };
+      });
+      state.libraryAlbums.push(...newAlbums);
+    },
+    addLibraryAlbum(state, album) {
+      const appId = Symbol.for("appId");
+      state.libraryAlbums.push({ ...album, [appId]: Math.random() });
     },
     addLibrarySongs(state, songs) {
       if (!Array.isArray(songs)) return;
@@ -140,10 +148,15 @@ export default createStore({
     },
     addLibraryArtists(state, artists) {
       if (!Array.isArray(artists)) return;
-      state.libraryArtists.push(...artists);
+      const newAlbums = artists.map((artist) => {
+        const appId = Symbol.for("appId");
+        return { ...artist, [appId]: Math.random() };
+      });
+      state.libraryArtists.push(...newAlbums);
     },
     addLibraryArtist(state, artist) {
-      state.libraryArtists.push(artist);
+      const appId = Symbol.for("appId");
+      state.libraryArtists.push({ ...artist, [appId]: Math.random() });
     },
     setNextSongs(state, next) {
       if (next !== null || undefined) state.nextSongs += next;
@@ -177,6 +190,22 @@ export default createStore({
       const appId = Symbol.for("appId");
       state.librarySongs = oldLibrarySongs.filter(
         (s) => s[appId] !== song[appId]
+      );
+    },
+
+    deleteAlbumFromLibrary(state, album) {
+      const oldLibraryAlbums = [...state.libraryAlbums];
+      const appId = Symbol.for("appId");
+      state.libraryAlbums = oldLibraryAlbums.filter(
+        (s) => s[appId] !== album[appId]
+      );
+    },
+
+    deleteArtistFromLibrary(state, artist) {
+      const oldLibraryArtist = [...state.libraryArtists];
+      const appId = Symbol.for("appId");
+      state.libraryArtists = oldLibraryArtist.filter(
+        (s) => s[appId] !== artist[appId]
       );
     },
 
@@ -306,6 +335,12 @@ export default createStore({
     },
     deleteFromLibrarySong({ commit }, song) {
       commit("deleteSongFromLibrary", song);
+    },
+    deleteFromLibraryAlbum({ commit }, album) {
+      commit("deleteAlbumFromLibrary", album);
+    },
+    deleteFromLibraryArtist({ commit }, artist) {
+      commit("deleteArtistFromLibrary", artist);
     },
     addLibraryAlbums({ commit }, albums) {
       commit("addLibraryAlbums", albums);

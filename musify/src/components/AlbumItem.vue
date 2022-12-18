@@ -1,21 +1,88 @@
 <template>
-  <router-link :to="'album/' + this.item.id" class="link">
-    <v-card :elevation="0" class="album" width="170" height="215">
-      <v-img cover :src="item?.cover"></v-img>
-      <v-card-title>{{ item?.title }}</v-card-title>
-      <v-card-text></v-card-text>
-    </v-card>
-  </router-link>
+  <v-menu open-on-hover>
+    <template v-slot:activator="{ props }">
+      <router-link :to="'album/' + this.album.id" class="link">
+        <v-card
+          :elevation="0"
+          class="album"
+          width="170"
+          height="215"
+          v-bind="props"
+        >
+          <v-img cover :src="album?.cover"></v-img>
+          <v-card-title>{{ album?.title }}</v-card-title>
+          <v-card-text></v-card-text>
+        </v-card>
+      </router-link>
+    </template>
+    <v-list width="80">
+      <template v-if="canAddToLibrary">
+        <v-list-item>
+          <v-tooltip text="Add to library" top>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                :icon="'mdi-plus'"
+                variant="text"
+                v-bind="props"
+                @click="onAddToLibrary(album)"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </v-list-item>
+      </template>
+
+      <template v-if="!canAddToLibrary">
+        <v-list-item>
+          <v-tooltip text="Delete from library">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                :icon="'mdi-delete'"
+                variant="text"
+                v-bind="props"
+                @click="onDeleteFromLibrary(album)"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </v-list-item>
+      </template>
+    </v-list>
+  </v-menu>
+  <v-snackbar v-model="snackBarIsOpened">
+    <span class="mr-3">Album has been added success</span>
+    <v-icon icon="mdi-check-circle-outline" color="success"></v-icon>
+    <template v-slot:actions>
+      <v-btn color="pink" variant="text" @click="snackBarIsOpened = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 <script>
 export default {
   name: "AlbumItem",
+  data() {
+    return {
+      snackBarIsOpened: false,
+    };
+  },
   props: {
-    item: {
+    album: {
       type: Object,
       default() {
         return {};
       },
+    },
+    canAddToLibrary: Boolean,
+  },
+
+  methods: {
+    onAddToLibrary(album) {
+      this.$store.dispatch("addLibraryAlbum", album);
+      this.snackBarIsOpened = true;
+    },
+
+    onDeleteFromLibrary(album) {
+      this.$store.dispatch("deleteFromLibraryAlbum", album);
     },
   },
 };
