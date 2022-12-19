@@ -77,9 +77,7 @@ export default {
   name: "App",
   components: { AudioPlayer },
 
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
 };
 </script>
 

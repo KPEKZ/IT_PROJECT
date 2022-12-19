@@ -11,7 +11,7 @@
         <v-icon icon="mdi-magnify"></v-icon>
       </template>
     </v-text-field>
-    <template v-if="getSongs?.length !== 0">
+    <template v-if="getSongs?.length !== 0 && !getSongsIsLoading">
       <v-row class="row"> <h3 class="header">Songs</h3></v-row>
       <v-row class="row rounded-lg row__theme-default songs">
         <SongsList
@@ -20,6 +20,7 @@
           class="list__song"
           :songs="getSongs"
           :canAddToLibrary="true"
+          :can-next-load="true"
           location="search"
         ></SongsList>
       </v-row>
@@ -35,6 +36,15 @@
         ></ArtistsList>
       </v-row>
     </template>
+    <template v-if="getSongsIsLoading">
+      <ClipLoader
+        class="loader"
+        :loading="getSongsIsLoading"
+        color="#fe7e91"
+        size="100px"
+      ></ClipLoader>
+      <h3 class="loader-text">Загружаем...</h3>
+    </template>
   </v-container>
 </template>
 
@@ -43,6 +53,7 @@ import _debounce from "lodash/debounce";
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
+import ClipLoader from "vue-spinner/src/ClipLoader";
 
 export default {
   name: "SearchView",
@@ -61,6 +72,7 @@ export default {
     SongsList,
     AlbumsList,
     ArtistsList,
+    ClipLoader,
   },
 
   computed: {
@@ -78,6 +90,12 @@ export default {
     getNextSongs() {
       return this.$store.getters.getNextSongs;
     },
+    getSongsIsLoading() {
+      return this.$store.getters.getSongsIsLoading;
+    },
+    getErrorLoad() {
+      return this.$store.getters.getStartErrorLoad;
+    },
   },
 
   watch: {
@@ -93,6 +111,14 @@ export default {
     },
     getNextSongs: function (newNextSongs) {
       this.nextSongs = newNextSongs;
+    },
+    getErrorLoad(error) {
+      if (error) {
+        setTimeout(() => {
+          console.log("repeat");
+          this.$store.dispatch("fetchInitSongs", this.query);
+        }, 2500);
+      }
     },
   },
 
@@ -111,7 +137,6 @@ export default {
 
     loadNextSongs() {
       if (this.getNextSongs > 0) {
-        console.log(this.getNextSongs, this.query);
         this.$store.dispatch("fetchNextSongs", this.query);
       }
     },
@@ -140,5 +165,19 @@ export default {
 
 .header {
   color: #69686f;
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader-text {
+  position: absolute;
+  left: 50%;
+  top: 57%;
+  transform: translate(-50%, -57%);
 }
 </style>
