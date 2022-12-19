@@ -25,11 +25,14 @@
       </v-row>
       <v-row class="row"> <h3 class="header">Albums</h3></v-row>
       <v-row class="row rounded-lg row__theme-default">
-        <AlbumsList :albums="getAlbums"></AlbumsList>
+        <AlbumsList :albums="getAlbums" :canAddToLibrary="true"></AlbumsList>
       </v-row>
       <v-row class="row"> <h3 class="header">Artists</h3></v-row>
       <v-row class="row rounded-lg row__theme-default">
-        <ArtistsList :artists="artists"></ArtistsList>
+        <ArtistsList
+          :artists="getArtists"
+          :canAddToLibrary="true"
+        ></ArtistsList>
       </v-row>
     </template>
     <ClipLoader

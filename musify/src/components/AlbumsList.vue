@@ -5,7 +5,10 @@
         <v-row class="carousel-row">
           <template :key="i" v-for="(album, i) in albumChunk">
             <v-col class="carousel-col">
-              <AlbumItem :item="album"></AlbumItem>
+              <AlbumItem
+                :album="album"
+                :canAddToLibrary="canAddToLibrary"
+              ></AlbumItem>
             </v-col>
           </template>
         </v-row>
@@ -33,6 +36,7 @@ export default {
     albums: {
       type: Array,
     },
+    canAddToLibrary: Boolean,
   },
 
   computed: {
