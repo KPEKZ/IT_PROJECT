@@ -26,12 +26,15 @@
         </section>
       </v-row>
     </template>
-    <ClipLoader
-      class="loader"
-      :loading="getSongsIsLoading"
-      color="#fe7e91"
-      size="100px"
-    ></ClipLoader>
+    <template v-if="getSongsIsLoading">
+      <ClipLoader
+        class="loader"
+        :loading="getSongsIsLoading"
+        color="#fe7e91"
+        size="100px"
+      ></ClipLoader>
+      <h3 class="loader-text">Загружаем...</h3>
+    </template>
   </v-container>
 </template>
 
@@ -74,11 +77,20 @@ export default {
     getSongsIsLoading() {
       return this.$store.getters.getSongsIsLoading;
     },
+
+    getErrorLoad() {
+      return this.$store.getters.getErrorLoad;
+    },
   },
 
   watch: {
-    getSongsIsLoading: function (value) {
-      console.log(value);
+    getErrorLoad(error) {
+      if (error) {
+        setTimeout(() => {
+          this.$store.dispatch("fetchRandomWord");
+          this.$store.dispatch("fetchInitHomeSongs", this.randomWord);
+        }, 2500);
+      }
     },
   },
 
@@ -91,12 +103,6 @@ export default {
 </script>
 
 <style scoped>
-.albums {
-  display: flex;
-  overflow: auto;
-  gap: 20px;
-}
-
 .row {
   margin: 0;
 }
@@ -129,5 +135,12 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.loader-text {
+  position: absolute;
+  left: 50%;
+  top: 57%;
+  transform: translate(-50%, -57%);
 }
 </style>

@@ -23,6 +23,10 @@ export default createStore({
     currentSongPos: 0,
     currentSongLocation: null,
     currentPlayQueue: [],
+    errorLoad: null,
+    startLoadError: null,
+    errorLoadNext: null,
+    songsViaApp: [],
   },
   getters: {
     getSongs(state) {
@@ -84,6 +88,18 @@ export default createStore({
     },
     getSongsInListLoading(state) {
       return state.songsInListsLoading;
+    },
+    getErrorLoad(state) {
+      return state.errorLoad;
+    },
+    getStartErrorLoad(state) {
+      return state.startLoadError;
+    },
+    getNextErrorLoad(state) {
+      return state.errorLoadNext;
+    },
+    getSongsViaApp(state) {
+      return state.songsViaApp;
     },
   },
   mutations: {
@@ -258,6 +274,24 @@ export default createStore({
     setCurrentSongLocation(state, location) {
       state.currentSongLocation = location;
     },
+
+    setErrorLoad(state, error) {
+      state.errorLoad = error;
+    },
+
+    setStartErrorLoad(state, error) {
+      state.startLoadError = error;
+    },
+
+    setNextErrorLoad(state, error) {
+      state.errorLoadNext = error;
+    },
+
+    setSongsViaApp(state, songs) {
+      if (!Array.isArray(songs)) return;
+
+      state.songsViaApp = songs;
+    },
   },
   actions: {
     fetchInitSongs({ commit }, query) {
@@ -275,13 +309,14 @@ export default createStore({
             commit("setNextSongs", 25);
           }
 
-          if (res.error.code === 4) {
-            console.log(res.error);
+          if (res.error?.code === 4) {
+            commit("setStartErrorLoad", res.error);
+          } else {
+            commit("setStartErrorLoad", null);
+            commit("setSongsIsLoading", false);
           }
         })
-        .finally(() => {
-          commit("setSongsIsLoading", false);
-        });
+        .finally(() => {});
     },
     fetchNextSongs({ commit, state }, query) {
       commit("setSongsInListLoading", true);
@@ -298,10 +333,15 @@ export default createStore({
           if (res.next) {
             commit("setNextSongs", 25);
           }
+
+          if (res.error?.code === 4) {
+            commit("setNextErrorLoad", res.error);
+          } else {
+            commit("setNextErrorLoad", null);
+            commit("setSongsInListLoading", true);
+          }
         })
-        .finally(() => {
-          commit("setSongsInListLoading", false);
-        });
+        .finally(() => {});
     },
     fetchInitHomeSongs({ commit }, query) {
       commit("setSongsIsLoading", true);
@@ -317,7 +357,13 @@ export default createStore({
           commit("setHomeSongs", songs);
           commit("setHomeAlbums", albums);
           commit("setHomeArtists", artists);
-          commit("setSongsIsLoading", false);
+
+          if (res.error?.code === 4) {
+            commit("setErrorLoad", res.error);
+          } else {
+            commit("setErrorLoad", null);
+            commit("setSongsIsLoading", false);
+          }
         })
         .finally(() => {});
     },
@@ -400,6 +446,18 @@ export default createStore({
 
     setSongsIsListLoading({ commit }, state) {
       commit("setSongsIsLoading", state);
+    },
+
+    setErrorLoad({ commit }, state) {
+      commit("setErrorLoad", state);
+    },
+
+    setStartErrorLoad({ commit }, state) {
+      commit("setStartErrorLoad", state);
+    },
+
+    setNextErrorLoad({ commit }, state) {
+      commit("setErrorLoad", state);
     },
   },
   modules: {},

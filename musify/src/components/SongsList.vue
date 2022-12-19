@@ -10,7 +10,7 @@
     <div v-intersect="onIntersect"></div>
     <ClipLoader
       class="loader"
-      :loading="getSongsInListLoading"
+      :loading="getSongsInListLoading && canNextLoad"
       color="#fe7e91"
       size="100px"
     ></ClipLoader>
@@ -34,6 +34,10 @@ export default {
     },
     location: String,
     canAddToLibrary: Boolean,
+    canNextLoad: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   components: {
@@ -51,13 +55,24 @@ export default {
     getSongsInListLoading() {
       return this.$store.getters.getSongsInListLoading;
     },
+    getErrorLoad() {
+      return this.$store.getters.getNextErrorLoad;
+    },
   },
 
   watch: {
     isIntersecting: function (newValue) {
       this.isIntersecting = newValue;
-      if (newValue) {
+      if (newValue && this.canNextLoad) {
         this.$emit("loadNextSongs");
+      }
+    },
+
+    getErrorLoad(error) {
+      if (error && this.canNextLoad) {
+        setTimeout(() => {
+          this.$emit("loadNextSongs");
+        }, 2500);
       }
     },
   },
