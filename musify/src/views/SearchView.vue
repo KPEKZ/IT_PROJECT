@@ -43,7 +43,7 @@
         color="#fe7e91"
         size="100px"
       ></ClipLoader>
-      <h3 class="loader-text">Загружаем...</h3>
+      <h3 class="loader-text">Loading...</h3>
     </template>
   </v-container>
 </template>
@@ -179,5 +179,18 @@ export default {
   left: 50%;
   top: 57%;
   transform: translate(-50%, -57%);
+}
+</style>
+<style>
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffb6c1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #fe7e91;
 }
 </style>

@@ -58,6 +58,8 @@
   </v-snackbar>
 </template>
 <script>
+import { removeAlbumLocal, saveAlbumLocal } from "@/services/LocalStorage";
+
 export default {
   name: "AlbumItem",
   data() {
@@ -77,11 +79,13 @@ export default {
 
   methods: {
     onAddToLibrary(album) {
+      saveAlbumLocal(album);
       this.$store.dispatch("addLibraryAlbum", album);
       this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(album) {
+      removeAlbumLocal(album.id);
       this.$store.dispatch("deleteFromLibraryAlbum", album);
     },
   },
