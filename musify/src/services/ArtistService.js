@@ -1,6 +1,6 @@
 const API_URL_KEY = "https://deezerdevs-deezer.p.rapidapi.com/artist/";
 const headerOptions = {
-  "X-RapidAPI-Key": "d5161370afmsheb9e90f835cdc0cp198544jsn489f6e24cf05",
+  "X-RapidAPI-Key": "766c1525bcmsh5b22a2b3d2772aep1005eajsn156bd96a25b4",
   "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
 };
 

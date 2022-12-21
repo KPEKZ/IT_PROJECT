@@ -1,47 +1,47 @@
 <template>
   <v-container class="container">
-    <template v-if="getAlbums.length > 0">
+    <template v-if="albums.length > 0">
       <v-row> <h3 class="header">Albums</h3></v-row>
       <v-row class="row row__theme_default rounded-lg">
-        <AlbumsList :albums="getAlbums"></AlbumsList>
+        <AlbumsList :albums="albums"></AlbumsList>
       </v-row>
     </template>
 
-    <template v-if="getArtists.length > 0">
+    <template v-if="artists.length > 0">
       <v-row> <h3 class="header">Artists</h3></v-row>
       <v-row class="row row__theme_default rounded-lg">
         <section class="songs">
-          <ArtistsList :artists="getArtists"></ArtistsList>
+          <ArtistsList :artists="artists"></ArtistsList>
         </section>
       </v-row>
     </template>
-    <template v-if="getSongs.length > 0">
+    <template v-if="songs.length > 0">
       <v-row> <h3 class="header">Songs</h3></v-row>
       <v-row class="row row__theme_default rounded-lg">
         <section class="songs">
           <SongsList
-            :songs="getSongs"
+            :songs="songs"
             :canAddToLibrary="false"
             location="library"
           ></SongsList>
         </section>
       </v-row>
     </template>
-    <template v-if="getSongs.length === 0">
+    <template v-if="songs.length === 0">
       <v-row class="row row__theme_active rounded">
         <v-alert class="alert" icon="mdi-music">
           No songs yet. Add the songs through search or home page
         </v-alert>
       </v-row>
     </template>
-    <template v-if="getAlbums.length === 0">
+    <template v-if="albums.length === 0">
       <v-row class="row row__theme_active rounded">
         <v-alert class="alert" icon="mdi-music-box-outline">
           No Albums yet. Add the albums through search or home page
         </v-alert>
       </v-row>
     </template>
-    <template v-if="getArtists.length === 0">
+    <template v-if="artists.length === 0">
       <v-row class="row row__theme_active rounded">
         <v-alert class="alert" icon="mdi-account-music-outline">
           No artists yet. Add the artists through search or home page
@@ -55,6 +55,11 @@
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
+import {
+  getAlbumsLocal,
+  getAllSongsLocal,
+  getArtistsLocal,
+} from "@/services/LocalStorage";
 
 export default {
   name: "LibraryView",
@@ -84,7 +89,6 @@ export default {
       return this.$store.getters.getLibraryArtists;
     },
   },
-  methods: {},
 
   watch: {
     getAlbums: function (newAlbums) {
@@ -101,9 +105,12 @@ export default {
   },
 
   mounted() {
-    this.albums = this.$store.getters.getLibraryAlbums;
-    this.songs = this.$store.getters.getLibrarySongs;
-    this.artists = this.$store.getters.getLibraryArtists;
+    this.albums = getAlbumsLocal();
+    this.songs = getAllSongsLocal();
+    this.artists = getArtistsLocal();
+    this.$store.dispatch("setLibrarySongs", this.songs);
+    this.$store.dispatch("setLibraryAlbums", this.albums);
+    this.$store.dispatch("setLibraryArtists", this.artists);
   },
 };
 </script>
@@ -147,5 +154,20 @@ export default {
 .alert {
   background-color: transparent;
   color: #fd516b;
+}
+</style>
+<style>
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffb6c1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #fe7e91;
+  border-radius: 5px;
 }
 </style>

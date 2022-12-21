@@ -26,6 +26,15 @@
         </section>
       </v-row>
     </template>
+    <template v-if="getSongsIsLoading">
+      <ClipLoader
+        class="loader"
+        :loading="getSongsIsLoading"
+        color="#fe7e91"
+        size="100px"
+      ></ClipLoader>
+      <h3 class="loader-text">Loading...</h3>
+    </template>
   </v-container>
 </template>
 
@@ -33,6 +42,7 @@
 import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
+import ClipLoader from "vue-spinner/src/ClipLoader";
 
 export default {
   name: "LibraryView",
@@ -49,6 +59,7 @@ export default {
     SongsList,
     AlbumsList,
     ArtistsList,
+    ClipLoader,
   },
   computed: {
     getSongs() {
@@ -62,6 +73,25 @@ export default {
     getArtists() {
       return this.$store.getters.getHomeArtists;
     },
+
+    getSongsIsLoading() {
+      return this.$store.getters.getSongsIsLoading;
+    },
+
+    getErrorLoad() {
+      return this.$store.getters.getErrorLoad;
+    },
+  },
+
+  watch: {
+    getErrorLoad(error) {
+      if (error) {
+        setTimeout(() => {
+          this.$store.dispatch("fetchRandomWord");
+          this.$store.dispatch("fetchInitHomeSongs", this.randomWord);
+        }, 2500);
+      }
+    },
   },
 
   mounted() {
@@ -73,12 +103,6 @@ export default {
 </script>
 
 <style scoped>
-.albums {
-  display: flex;
-  overflow: auto;
-  gap: 20px;
-}
-
 .row {
   margin: 0;
 }
@@ -104,5 +128,19 @@ export default {
   gap: 20px;
   flex-flow: column;
   padding: 50px 0 50px 0;
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader-text {
+  position: absolute;
+  left: 50%;
+  top: 57%;
+  transform: translate(-50%, -57%);
 }
 </style>

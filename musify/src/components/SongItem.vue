@@ -78,7 +78,7 @@
     </template>
   </v-hover>
   <v-snackbar v-model="snackBarIsOpened">
-    <span class="mr-3">SongStoreStruct has been added success</span>
+    <span class="mr-3">Song has been added success</span>
     <v-icon icon="mdi-check-circle-outline" color="success"></v-icon>
     <template v-slot:actions>
       <v-btn color="pink" variant="text" @click="snackBarIsOpened = false">
@@ -89,6 +89,8 @@
 </template>
 
 <script>
+import { removeSongLocal, saveSongLocal } from "@/services/LocalStorage";
+
 export default {
   name: "SongItem",
   data() {
@@ -161,11 +163,13 @@ export default {
     },
 
     onAddToLibrary(song) {
+      saveSongLocal(song);
       this.$store.dispatch("addLibrarySong", song);
       this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(song) {
+      removeSongLocal(song.id);
       this.$store.dispatch("deleteFromLibrarySong", song);
     },
 

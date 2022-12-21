@@ -14,6 +14,7 @@ export default createStore({
     HomeAlbums: [],
     HomeArtists: [],
     songsIsLoading: false,
+    songsInListsLoading: false,
     nextSongs: 0,
     randomWord: "",
     currentSongDto: null,
@@ -22,6 +23,10 @@ export default createStore({
     currentSongPos: 0,
     currentSongLocation: null,
     currentPlayQueue: [],
+    errorLoad: null,
+    startLoadError: null,
+    errorLoadNext: null,
+    songsViaApp: [],
   },
   getters: {
     getSongs(state) {
@@ -78,6 +83,24 @@ export default createStore({
     getCurrentSongLocation(state) {
       return state.currentSongLocation;
     },
+    getSongsIsLoading(state) {
+      return state.songsIsLoading;
+    },
+    getSongsInListLoading(state) {
+      return state.songsInListsLoading;
+    },
+    getErrorLoad(state) {
+      return state.errorLoad;
+    },
+    getStartErrorLoad(state) {
+      return state.startLoadError;
+    },
+    getNextErrorLoad(state) {
+      return state.errorLoadNext;
+    },
+    getSongsViaApp(state) {
+      return state.songsViaApp;
+    },
   },
   mutations: {
     setSongs(state, songs) {
@@ -103,6 +126,9 @@ export default createStore({
     },
     setSongsIsLoading(state, value) {
       state.songsIsLoading = value;
+    },
+    setSongsInListLoading(state, value) {
+      state.songsInListsLoading = value;
     },
     setLibrarySongs(state, songs) {
       if (!Array.isArray(songs)) return;
@@ -233,6 +259,9 @@ export default createStore({
         case "search":
           state.currentPlayQueue = [...state.songs];
           break;
+        case "album":
+          state.currentPlayQueue = [...state.songsViaApp];
+          break;
         default:
           state.currentPlayQueue = [];
           break;
@@ -247,6 +276,24 @@ export default createStore({
 
     setCurrentSongLocation(state, location) {
       state.currentSongLocation = location;
+    },
+
+    setErrorLoad(state, error) {
+      state.errorLoad = error;
+    },
+
+    setStartErrorLoad(state, error) {
+      state.startLoadError = error;
+    },
+
+    setNextErrorLoad(state, error) {
+      state.errorLoadNext = error;
+    },
+
+    setSongsViaApp(state, songs) {
+      if (!Array.isArray(songs)) return;
+
+      state.songsViaApp = songs;
     },
   },
   actions: {
@@ -264,13 +311,18 @@ export default createStore({
           if (res.next) {
             commit("setNextSongs", 25);
           }
+
+          if (res.error?.code === 4) {
+            commit("setStartErrorLoad", res.error);
+          } else {
+            commit("setStartErrorLoad", null);
+            commit("setSongsIsLoading", false);
+          }
         })
-        .finally(() => {
-          commit("setSongsIsLoading", false);
-        });
+        .finally(() => {});
     },
     fetchNextSongs({ commit, state }, query) {
-      commit("setSongsIsLoading", true);
+      commit("setSongsInListLoading", true);
 
       getAllSongs(query, state.nextSongs)
         .then((res) => {
@@ -284,10 +336,15 @@ export default createStore({
           if (res.next) {
             commit("setNextSongs", 25);
           }
+
+          if (res.error?.code === 4) {
+            commit("setNextErrorLoad", res.error);
+          } else {
+            commit("setNextErrorLoad", null);
+            commit("setSongsInListLoading", true);
+          }
         })
-        .finally(() => {
-          commit("setSongsIsLoading", false);
-        });
+        .finally(() => {});
     },
     fetchInitHomeSongs({ commit }, query) {
       commit("setSongsIsLoading", true);
@@ -303,10 +360,15 @@ export default createStore({
           commit("setHomeSongs", songs);
           commit("setHomeAlbums", albums);
           commit("setHomeArtists", artists);
+
+          if (res.error?.code || res.data.length === 0) {
+            commit("setErrorLoad", res.error);
+          } else {
+            commit("setErrorLoad", null);
+            commit("setSongsIsLoading", false);
+          }
         })
-        .finally(() => {
-          commit("setSongsIsLoading", false);
-        });
+        .finally(() => {});
     },
 
     fetchRandomWord({ commit }) {
@@ -379,6 +441,30 @@ export default createStore({
 
     setCurrentSongLocation({ commit }, location) {
       commit("setCurrentSongLocation", location);
+    },
+
+    setSongsIsLoading({ commit }, state) {
+      commit("setSongsIsLoading", state);
+    },
+
+    setSongsIsListLoading({ commit }, state) {
+      commit("setSongsIsLoading", state);
+    },
+
+    setErrorLoad({ commit }, state) {
+      commit("setErrorLoad", state);
+    },
+
+    setStartErrorLoad({ commit }, state) {
+      commit("setStartErrorLoad", state);
+    },
+
+    setNextErrorLoad({ commit }, state) {
+      commit("setErrorLoad", state);
+    },
+
+    setSongsViaApp({ commit }, songs) {
+      commit("setSongsViaApp", songs);
     },
   },
   modules: {},
