@@ -149,3 +149,18 @@ export default {
   color: #fd516b;
 }
 </style>
+<style>
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffb6c1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #fe7e91;
+  border-radius: 5px;
+}
+</style>

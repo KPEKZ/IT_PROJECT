@@ -181,3 +181,16 @@ export default {
   transform: translate(-50%, -57%);
 }
 </style>
+<style>
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffb6c1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #fe7e91;
+}
+</style>

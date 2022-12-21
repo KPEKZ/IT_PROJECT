@@ -5,7 +5,7 @@ const headerOptions = {
 };
 
 export async function getAllSongsInArtist(id) {
-  let url = API_URL_KEY + id + "/top?limit=100";
+  let url = API_URL_KEY + id + "/top?limit=50";
 
   try {
     const response = await fetch(url, {
