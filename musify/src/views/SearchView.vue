@@ -43,7 +43,7 @@
         color="#fe7e91"
         size="100px"
       ></ClipLoader>
-      <h3 class="loader-text">Загружаем...</h3>
+      <h3 class="loader-text">Loading...</h3>
     </template>
   </v-container>
 </template>

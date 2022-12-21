@@ -259,6 +259,9 @@ export default createStore({
         case "search":
           state.currentPlayQueue = [...state.songs];
           break;
+        case "album":
+          state.currentPlayQueue = [...state.songsViaApp];
+          break;
         default:
           state.currentPlayQueue = [];
           break;
@@ -358,7 +361,7 @@ export default createStore({
           commit("setHomeAlbums", albums);
           commit("setHomeArtists", artists);
 
-          if (res.error?.code === 4) {
+          if (res.error?.code || res.data.length === 0) {
             commit("setErrorLoad", res.error);
           } else {
             commit("setErrorLoad", null);
@@ -458,6 +461,10 @@ export default createStore({
 
     setNextErrorLoad({ commit }, state) {
       commit("setErrorLoad", state);
+    },
+
+    setSongsViaApp({ commit }, songs) {
+      commit("setSongsViaApp", songs);
     },
   },
   modules: {},

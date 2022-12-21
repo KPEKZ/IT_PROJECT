@@ -1,19 +1,17 @@
 <template>
   <v-menu open-on-hover>
     <template v-slot:activator="{ props }">
-      <router-link :to="'artist/' + this.artist.id" class="link">
-        <v-card
-          :elevation="0"
-          class="artist"
-          width="170"
-          height="215"
-          v-bind="props"
-        >
-          <v-img cover :src="artist?.picture"></v-img>
-          <v-card-title>{{ artist?.name }}</v-card-title>
-          <v-card-text></v-card-text>
-        </v-card>
-      </router-link>
+      <v-card
+        :elevation="0"
+        class="artist"
+        width="170"
+        height="215"
+        v-bind="props"
+      >
+        <v-img cover :src="artist?.picture"></v-img>
+        <v-card-title>{{ artist?.name }}</v-card-title>
+        <v-card-text></v-card-text>
+      </v-card>
     </template>
     <v-list width="80">
       <template v-if="canAddToLibrary">
@@ -59,6 +57,8 @@
 </template>
 
 <script>
+import { removeArtistLocal, saveArtistLocal } from "@/services/LocalStorage";
+
 export default {
   name: "ArtistItem",
   data() {
@@ -77,11 +77,13 @@ export default {
   },
   methods: {
     onAddToLibrary(artist) {
+      saveArtistLocal(artist);
       this.$store.dispatch("addLibraryArtist", artist);
       this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(artist) {
+      removeArtistLocal(artist.id);
       this.$store.dispatch("deleteFromLibraryArtist", artist);
     },
   },
