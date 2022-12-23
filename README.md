@@ -75,6 +75,16 @@ CSS
 
 Страница с собственной картотекой музыки. Сохранить элемент можно на странице поиска или на домашней странице.
 
+## Ссылки
+
+[Ссылка на репозиторий проекта](https://github.com/KPEKZ/IT_PROJECT)
+
+[Ссылка на проект](https://kpekz.github.io/IT_PROJECT/#/)
+
+[Ссылка на лендинг репозиторий](https://github.com/KPEKZ/musify-landing)
+
+[Ссылка на лендинг](https://kpekz.github.io/musify-landing)
+
 
 
 
