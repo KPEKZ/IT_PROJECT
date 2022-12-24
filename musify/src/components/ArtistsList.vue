@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { ClearedList } from "@/helpers/ClearedList.js";
 import ArtistItem from "@/components/ArtistItem";
+import splitedUniqueArray from "@/helpers/splited-unique-array";
 
 export default {
   name: "ArtistsList",
@@ -41,7 +41,7 @@ export default {
 
   computed: {
     clearedArtists() {
-      return ClearedList(this.artists, this.columns);
+      return splitedUniqueArray(this.artists, this.columns, "id");
     },
   },
 
