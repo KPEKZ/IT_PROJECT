@@ -1,5 +1,5 @@
 import _ from "lodash";
-import isNumeric from "./is-numeris";
+import isNumeric from "./is-numeric";
 
 /**
  * @description split an array and filter by key
