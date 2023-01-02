@@ -1,17 +1,19 @@
 <template>
   <v-menu open-on-hover>
     <template v-slot:activator="{ props }">
-      <v-card
-        :elevation="0"
-        class="artist"
-        width="170"
-        height="215"
-        v-bind="props"
-      >
-        <v-img cover :src="artist?.picture"></v-img>
-        <v-card-title>{{ artist?.name }}</v-card-title>
-        <v-card-text></v-card-text>
-      </v-card>
+      <router-link :to="'artist/' + this.artist.id" class="link">
+        <v-card
+          :elevation="0"
+          class="artist"
+          width="170"
+          height="215"
+          v-bind="props"
+        >
+          <v-img cover :src="artist?.picture"></v-img>
+          <v-card-title>{{ artist?.name }}</v-card-title>
+          <v-card-text></v-card-text>
+        </v-card>
+      </router-link>
     </template>
     <v-list width="80">
       <template v-if="canAddToLibrary">
