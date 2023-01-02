@@ -4,7 +4,7 @@ import { DEEZER_URL } from "@/configs/deezer-url";
 const ARTIST_URL_KEY = `${PROXY_URL}/${DEEZER_URL}/artist/`;
 
 export async function getAllSongsInArtist(id) {
-  let url = ARTIST_URL_KEY + id + "/top";
+  const url = ARTIST_URL_KEY + id + "/top";
 
   try {
     const response = await fetch(url, {

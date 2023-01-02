@@ -4,7 +4,7 @@ import { DEEZER_URL } from "@/configs/deezer-url";
 const ALBUM_URL_KEY = `${PROXY_URL}/${DEEZER_URL}/album/`;
 
 export async function getAllSongsInAlbum(id) {
-  let url = ALBUM_URL_KEY + id;
+  const url = ALBUM_URL_KEY + id;
 
   try {
     const response = await fetch(url, {

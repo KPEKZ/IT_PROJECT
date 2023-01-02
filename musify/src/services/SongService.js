@@ -1,19 +1,15 @@
-const API_URL_KEY = "https://deezerdevs-deezer.p.rapidapi.com/";
-const headerOptions = {
-  "X-RapidAPI-Key": "d5161370afmsheb9e90f835cdc0cp198544jsn489f6e24cf05",
-  "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com",
-};
+import { PROXY_URL } from "@/configs/proxy-url";
+import { DEEZER_URL } from "@/configs/deezer-url";
+
+const SONG_URL_KEY = `${PROXY_URL}/${DEEZER_URL}/search`;
 
 export async function getAllSongs(query, next = 0) {
   if (typeof query !== "string") return;
-  let url = API_URL_KEY + `search?q=${query}&index=${next}`;
+  const url = SONG_URL_KEY + `?q=${query}&index=${next}`;
 
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: {
-        ...headerOptions,
-      },
     });
     return await response.json();
   } catch (error) {
