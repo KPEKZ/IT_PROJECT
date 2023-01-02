@@ -22,16 +22,27 @@
           class="list__song"
           :songs="songs"
           :canAddToLibrary="true"
+          location="artist"
         >
         </SongsList>
         <div v-intersect="onIntersect"></div>
       </section>
     </v-row>
   </v-container>
+  <template v-if="isLoading">
+    <ClipLoader
+      class="loader"
+      :loading="isLoading"
+      color="#fe7e91"
+      size="100px"
+    ></ClipLoader>
+    <h3 class="loader-text">Loading...</h3>
+  </template>
 </template>
 <script>
 import { getAllSongsInArtist } from "@/services/ArtistService";
 import SongsList from "@/components/SongsList";
+import ClipLoader from "vue-spinner/src/ClipLoader";
 
 export default {
   data() {
@@ -50,12 +61,17 @@ export default {
           track.artist.picture = artistPicture;
           return newTrack;
         });
+
+        console.log(this.songs);
+
+        this.$store.dispatch("setSongsViaApp", this.songs);
       });
     },
   },
 
   components: {
     SongsList,
+    ClipLoader,
   },
 
   mounted() {

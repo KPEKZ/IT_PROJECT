@@ -262,6 +262,9 @@ export default createStore({
         case "album":
           state.currentPlayQueue = [...state.songsViaApp];
           break;
+        case "artist":
+          state.currentPlayQueue = [...state.songsViaApp];
+          break;
         default:
           state.currentPlayQueue = [];
           break;
