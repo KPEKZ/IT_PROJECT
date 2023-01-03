@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import { getAllSongs } from "@/services/SongService";
 import { getRandomWord } from "@/services/RandomWordService";
+import { homeStore } from "@/modules/home/store/home.store";
 
 export default createStore({
   state: {
@@ -10,9 +11,6 @@ export default createStore({
     librarySongs: [],
     libraryAlbums: [],
     libraryArtists: [],
-    HomeSongs: [],
-    HomeAlbums: [],
-    HomeArtists: [],
     songsIsLoading: false,
     songsInListsLoading: false,
     nextSongs: 0,
@@ -49,15 +47,6 @@ export default createStore({
     },
     getNextSongs(state) {
       return state.nextSongs;
-    },
-    getHomeSongs(state) {
-      return state.HomeSongs;
-    },
-    getHomeAlbums(state) {
-      return state.HomeAlbums;
-    },
-    getHomeArtists(state) {
-      return state.HomeArtists;
     },
     getRandomWord(state) {
       return state.randomWord;
@@ -187,27 +176,6 @@ export default createStore({
     setNextSongs(state, next) {
       if (next !== null || undefined) state.nextSongs += next;
     },
-    setHomeSongs(state, songs) {
-      state.HomeSongs = songs;
-    },
-    addHomeSongs(state, songs) {
-      if (!Array.isArray(songs)) return;
-      state.HomeSongs.push(...songs);
-    },
-    setHomeAlbums(state, albums) {
-      state.HomeAlbums = albums;
-    },
-    addHomeAlbums(state, albums) {
-      if (!Array.isArray(albums)) return;
-      state.HomeAlbums.push(...albums);
-    },
-    setHomeArtists(state, artists) {
-      state.HomeArtists = artists;
-    },
-    addHomeArtists(state, artists) {
-      if (!Array.isArray(artists)) return;
-      state.HomeArtists.push(...artists);
-    },
     setRandomWord(state, randomWord) {
       state.randomWord = randomWord;
     },
@@ -251,7 +219,7 @@ export default createStore({
     setCurrentPlayQueue(state, location) {
       switch (location) {
         case "home":
-          state.currentPlayQueue = [...state.HomeSongs];
+          state.currentPlayQueue = [...state.home.HomeSongs];
           break;
         case "library":
           state.currentPlayQueue = [...state.librarySongs];
@@ -360,9 +328,9 @@ export default createStore({
           const albums = songs?.map((song) => song.album);
           const artists = songs?.map((song) => song.artist);
 
-          commit("setHomeSongs", songs);
-          commit("setHomeAlbums", albums);
-          commit("setHomeArtists", artists);
+          commit("home/setHomeSongs", songs);
+          commit("home/setHomeAlbums", albums);
+          commit("home/setHomeArtists", artists);
 
           if (res.error?.code || res.data.length === 0) {
             commit("setErrorLoad", res.error);
@@ -470,5 +438,7 @@ export default createStore({
       commit("setSongsViaApp", songs);
     },
   },
-  modules: {},
+  modules: {
+    home: homeStore,
+  },
 });

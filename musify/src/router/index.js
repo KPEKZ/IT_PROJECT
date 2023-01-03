@@ -1,14 +1,10 @@
+import { homeRoutes } from "@/modules/home/home.routes";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
     path: "/",
     redirect: "/home",
-  },
-  {
-    path: "/home",
-    name: "home",
-    component: () => import("../views/HomeView.vue"),
   },
   {
     path: "/about",
@@ -35,6 +31,8 @@ const routes = [
     name: "ArtistView",
     component: () => import("../views/ArtistView"),
   },
+
+  ...homeRoutes,
 ];
 
 const router = createRouter({
