@@ -3,12 +3,10 @@ import { getAllSongs } from "@/services/SongService";
 import { getRandomWord } from "@/services/RandomWordService";
 import { homeStore } from "@/modules/home/store/home.store";
 import { libraryStore } from "@/modules/library/store/library.store";
+import { searchStore } from "@/modules/search/store/search.store";
 
 export default createStore({
   state: {
-    songs: [],
-    albums: [],
-    artists: [],
     songsIsLoading: false,
     songsInListsLoading: false,
     nextSongs: 0,
@@ -25,15 +23,6 @@ export default createStore({
     songsViaApp: [],
   },
   getters: {
-    getSongs(state) {
-      return state.songs;
-    },
-    getAlbums(state) {
-      return state.albums;
-    },
-    getArtists(state) {
-      return state.artists;
-    },
     getNextSongs(state) {
       return state.nextSongs;
     },
@@ -81,27 +70,6 @@ export default createStore({
     },
   },
   mutations: {
-    setSongs(state, songs) {
-      state.songs = songs;
-    },
-    addSongs(state, songs) {
-      if (!Array.isArray(songs)) return;
-      state.songs.push(...songs);
-    },
-    setAlbums(state, albums) {
-      state.albums = albums;
-    },
-    addAlbums(state, albums) {
-      if (!Array.isArray(albums)) return;
-      state.albums.push(...albums);
-    },
-    setArtists(state, artists) {
-      state.artists = artists;
-    },
-    addArtists(state, artists) {
-      if (!Array.isArray(artists)) return;
-      state.artists.push(...artists);
-    },
     setSongsIsLoading(state, value) {
       state.songsIsLoading = value;
     },
@@ -137,7 +105,7 @@ export default createStore({
           state.currentPlayQueue = [...state.library.librarySongs];
           break;
         case "search":
-          state.currentPlayQueue = [...state.songs];
+          state.currentPlayQueue = [...state.search.songs];
           break;
         case "album":
           state.currentPlayQueue = [...state.songsViaApp];
@@ -188,9 +156,9 @@ export default createStore({
           const albums = songs?.map((song) => song.album);
           const artists = songs?.map((song) => song.artist);
 
-          commit("setSongs", songs);
-          commit("setAlbums", albums);
-          commit("setArtists", artists);
+          commit("search/setSongs", songs);
+          commit("search/setAlbums", albums);
+          commit("search/setArtists", artists);
           if (res.next) {
             commit("setNextSongs", 25);
           }
@@ -213,9 +181,9 @@ export default createStore({
           const albums = songs?.map((song) => song.album);
           const artists = songs?.map((song) => song.artist);
 
-          commit("addSongs", songs);
-          commit("addAlbums", albums);
-          commit("addArtists", artists);
+          commit("search/addSongs", songs);
+          commit("search/addAlbums", albums);
+          commit("search/addArtists", artists);
           if (res.next) {
             commit("setNextSongs", 25);
           }
@@ -262,10 +230,6 @@ export default createStore({
       getRandomWord().then((res) => {
         commit("setRandomWord", res.word);
       });
-    },
-
-    addSongs({ commit }, songs) {
-      commit("addSongs", songs);
     },
 
     setNextSongs({ commit }, next) {
@@ -322,5 +286,6 @@ export default createStore({
   modules: {
     home: homeStore,
     library: libraryStore,
+    search: searchStore,
   },
 });

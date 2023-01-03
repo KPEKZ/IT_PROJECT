@@ -1,5 +1,6 @@
 import { homeRoutes } from "@/modules/home/home.routes";
 import { libraryRoutes } from "@/modules/library/library.routes";
+import { searchRoutes } from "@/modules/search/search.routes";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
@@ -12,12 +13,6 @@ const routes = [
     name: "about",
     component: () => import("../views/AboutView.vue"),
   },
-
-  {
-    path: "/search",
-    name: "SearchView",
-    component: () => import("../views/SearchView"),
-  },
   {
     path: "/album/:id",
     name: "AlbumView",
@@ -29,6 +24,7 @@ const routes = [
     component: () => import("../views/ArtistView"),
   },
 
+  ...searchRoutes,
   ...homeRoutes,
   ...libraryRoutes,
 ];
