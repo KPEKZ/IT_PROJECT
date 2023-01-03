@@ -1,3 +1,4 @@
+import { aboutRoutes } from "@/modules/about/about.routes";
 import { homeRoutes } from "@/modules/home/home.routes";
 import { libraryRoutes } from "@/modules/library/library.routes";
 import { searchRoutes } from "@/modules/search/search.routes";
@@ -7,11 +8,6 @@ const routes = [
   {
     path: "/",
     redirect: "/home",
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: () => import("../views/AboutView.vue"),
   },
   {
     path: "/album/:id",
@@ -27,6 +23,7 @@ const routes = [
   ...searchRoutes,
   ...homeRoutes,
   ...libraryRoutes,
+  ...aboutRoutes,
 ];
 
 const router = createRouter({
