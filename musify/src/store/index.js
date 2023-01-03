@@ -2,15 +2,13 @@ import { createStore } from "vuex";
 import { getAllSongs } from "@/services/SongService";
 import { getRandomWord } from "@/services/RandomWordService";
 import { homeStore } from "@/modules/home/store/home.store";
+import { libraryStore } from "@/modules/library/store/library.store";
 
 export default createStore({
   state: {
     songs: [],
     albums: [],
     artists: [],
-    librarySongs: [],
-    libraryAlbums: [],
-    libraryArtists: [],
     songsIsLoading: false,
     songsInListsLoading: false,
     nextSongs: 0,
@@ -35,15 +33,6 @@ export default createStore({
     },
     getArtists(state) {
       return state.artists;
-    },
-    getLibrarySongs(state) {
-      return state.librarySongs;
-    },
-    getLibraryAlbums(state) {
-      return state.libraryAlbums;
-    },
-    getLibraryArtists(state) {
-      return state.libraryArtists;
     },
     getNextSongs(state) {
       return state.nextSongs;
@@ -119,88 +108,11 @@ export default createStore({
     setSongsInListLoading(state, value) {
       state.songsInListsLoading = value;
     },
-    setLibrarySongs(state, songs) {
-      if (!Array.isArray(songs)) return;
-      state.librarySongs = songs.map((song) => {
-        const appId = Symbol.for("appId");
-        return { ...song, [appId]: Math.random() };
-      });
-    },
-    setLibraryAlbums(state, albums) {
-      if (!Array.isArray(albums)) return;
-      state.libraryAlbums = albums.map((album) => {
-        const appId = Symbol.for("appId");
-        return { ...album, [appId]: Math.random() };
-      });
-    },
-    addLibraryAlbums(state, albums) {
-      if (!Array.isArray(albums)) return;
-      const newAlbums = albums.map((album) => {
-        const appId = Symbol.for("appId");
-        return { ...album, [appId]: Math.random() };
-      });
-      state.libraryAlbums.push(...newAlbums);
-    },
-    addLibraryAlbum(state, album) {
-      const appId = Symbol.for("appId");
-      state.libraryAlbums.push({ ...album, [appId]: Math.random() });
-    },
-    addLibrarySongs(state, songs) {
-      if (!Array.isArray(songs)) return;
-      const newSongs = songs.map((song) => {
-        const appId = Symbol.for("appId");
-        return { ...song, [appId]: Math.random() };
-      });
-      state.librarySongs.push(...newSongs);
-    },
-    addLibrarySong(state, song) {
-      const appId = Symbol.for("appId");
-      state.librarySongs.push({ ...song, [appId]: Math.random() });
-    },
-    setLibraryArtists(state, artists) {
-      if (!Array.isArray(artists)) return;
-      state.libraryArtists = artists;
-    },
-    addLibraryArtists(state, artists) {
-      if (!Array.isArray(artists)) return;
-      const newAlbums = artists.map((artist) => {
-        const appId = Symbol.for("appId");
-        return { ...artist, [appId]: Math.random() };
-      });
-      state.libraryArtists.push(...newAlbums);
-    },
-    addLibraryArtist(state, artist) {
-      const appId = Symbol.for("appId");
-      state.libraryArtists.push({ ...artist, [appId]: Math.random() });
-    },
     setNextSongs(state, next) {
       if (next !== null || undefined) state.nextSongs += next;
     },
     setRandomWord(state, randomWord) {
       state.randomWord = randomWord;
-    },
-    deleteSongFromLibrary(state, song) {
-      const oldLibrarySongs = [...state.librarySongs];
-      const appId = Symbol.for("appId");
-      state.librarySongs = oldLibrarySongs.filter(
-        (s) => s[appId] !== song[appId]
-      );
-    },
-
-    deleteAlbumFromLibrary(state, album) {
-      const oldLibraryAlbums = [...state.libraryAlbums];
-      const appId = Symbol.for("appId");
-      state.libraryAlbums = oldLibraryAlbums.filter(
-        (s) => s[appId] !== album[appId]
-      );
-    },
-
-    deleteArtistFromLibrary(state, artist) {
-      const oldLibraryArtist = [...state.libraryArtists];
-      const appId = Symbol.for("appId");
-      state.libraryArtists = oldLibraryArtist.filter(
-        (s) => s[appId] !== artist[appId]
-      );
     },
 
     setCurrentSongAudio(state, songAudio) {
@@ -222,7 +134,7 @@ export default createStore({
           state.currentPlayQueue = [...state.home.HomeSongs];
           break;
         case "library":
-          state.currentPlayQueue = [...state.librarySongs];
+          state.currentPlayQueue = [...state.library.librarySongs];
           break;
         case "search":
           state.currentPlayQueue = [...state.songs];
@@ -332,7 +244,11 @@ export default createStore({
           commit("home/setHomeAlbums", albums);
           commit("home/setHomeArtists", artists);
 
-          if (res.error?.code || res.data.length === 0) {
+          if (
+            res.error?.code ||
+            res.data.length === 0 ||
+            res.data?.total === 0
+          ) {
             commit("setErrorLoad", res.error);
           } else {
             commit("setErrorLoad", null);
@@ -351,42 +267,7 @@ export default createStore({
     addSongs({ commit }, songs) {
       commit("addSongs", songs);
     },
-    setLibrarySongs({ commit }, songs) {
-      commit("setLibrarySongs", songs);
-    },
-    setLibraryAlbums({ commit }, albums) {
-      commit("setLibraryAlbums", albums);
-    },
-    addLibrarySong({ commit }, song) {
-      commit("addLibrarySong", song);
-    },
-    addLibraryAlbum({ commit }, album) {
-      commit("addLibraryAlbum", album);
-    },
-    addLibrarySongs({ commit }, songs) {
-      commit("addLibrarySongs", songs);
-    },
-    deleteFromLibrarySong({ commit }, song) {
-      commit("deleteSongFromLibrary", song);
-    },
-    deleteFromLibraryAlbum({ commit }, album) {
-      commit("deleteAlbumFromLibrary", album);
-    },
-    deleteFromLibraryArtist({ commit }, artist) {
-      commit("deleteArtistFromLibrary", artist);
-    },
-    addLibraryAlbums({ commit }, albums) {
-      commit("addLibraryAlbums", albums);
-    },
-    setLibraryArtists({ commit }, artists) {
-      commit("setLibraryArtists", artists);
-    },
-    addLibraryArtists({ commit }, artists) {
-      commit("addLibraryArtists", artists);
-    },
-    addLibraryArtist({ commit }, artist) {
-      commit("addLibraryArtist", artist);
-    },
+
     setNextSongs({ commit }, next) {
       commit("setNextSongs", next);
     },
@@ -440,5 +321,6 @@ export default createStore({
   },
   modules: {
     home: homeStore,
+    library: libraryStore,
   },
 });

@@ -3,7 +3,7 @@
     <template v-if="albums.length > 0">
       <v-row> <h3 class="header">Albums</h3></v-row>
       <v-row class="row row__theme_default rounded-lg">
-        <AlbumsList :albums="albums"></AlbumsList>
+        <AlbumsList :albums="getAlbums"></AlbumsList>
       </v-row>
     </template>
 
@@ -11,7 +11,7 @@
       <v-row> <h3 class="header">Artists</h3></v-row>
       <v-row class="row row__theme_default rounded-lg">
         <section class="songs">
-          <ArtistsList :artists="artists"></ArtistsList>
+          <ArtistsList :artists="getArtists"></ArtistsList>
         </section>
       </v-row>
     </template>
@@ -20,7 +20,7 @@
       <v-row class="row row__theme_default rounded-lg">
         <section class="songs">
           <SongsList
-            :songs="songs"
+            :songs="getSongs"
             :canAddToLibrary="false"
             location="library"
           ></SongsList>
@@ -60,9 +60,10 @@ import {
   getAllSongsLocal,
   getArtistsLocal,
 } from "@/services/LocalStorage";
+import { mapGetters } from "vuex";
 
 export default {
-  name: "LibraryView",
+  name: "LibraryComponent",
   data() {
     return {
       albums: [],
@@ -76,18 +77,13 @@ export default {
     AlbumsList,
     ArtistsList,
   },
+
   computed: {
-    getSongs() {
-      return this.$store.getters.getLibrarySongs;
-    },
-
-    getAlbums() {
-      return this.$store.getters.getLibraryAlbums;
-    },
-
-    getArtists() {
-      return this.$store.getters.getLibraryArtists;
-    },
+    ...mapGetters({
+      getSongs: "library/getLibrarySongs",
+      getAlbums: "library/getLibraryAlbums",
+      getArtists: "library/getLibraryArtists",
+    }),
   },
 
   watch: {
@@ -100,6 +96,7 @@ export default {
     },
 
     getSongs: function (newSongs) {
+      console.log(newSongs);
       this.songs = newSongs;
     },
   },
@@ -108,9 +105,10 @@ export default {
     this.albums = getAlbumsLocal();
     this.songs = getAllSongsLocal();
     this.artists = getArtistsLocal();
-    this.$store.dispatch("setLibrarySongs", this.songs);
-    this.$store.dispatch("setLibraryAlbums", this.albums);
-    this.$store.dispatch("setLibraryArtists", this.artists);
+
+    this.$store.dispatch("library/setLibrarySongs", this.songs);
+    this.$store.dispatch("library/setLibraryAlbums", this.albums);
+    this.$store.dispatch("library/setLibraryArtists", this.artists);
   },
 };
 </script>
@@ -155,8 +153,7 @@ export default {
   background-color: transparent;
   color: #fd516b;
 }
-</style>
-<style>
+
 ::-webkit-scrollbar {
   width: 7px;
 }

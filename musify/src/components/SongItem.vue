@@ -164,13 +164,13 @@ export default {
 
     onAddToLibrary(song) {
       saveSongLocal(song);
-      this.$store.dispatch("addLibrarySong", song);
+      this.$store.dispatch("library/addLibrarySong", song);
       this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(song) {
       removeSongLocal(song.id);
-      this.$store.dispatch("deleteFromLibrarySong", song);
+      this.$store.dispatch("library/deleteFromLibrarySong", song);
     },
 
     setSongPlayingToFalse() {

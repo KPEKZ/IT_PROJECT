@@ -1,4 +1,5 @@
 import { homeRoutes } from "@/modules/home/home.routes";
+import { libraryRoutes } from "@/modules/library/library.routes";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
@@ -11,11 +12,7 @@ const routes = [
     name: "about",
     component: () => import("../views/AboutView.vue"),
   },
-  {
-    path: "/library",
-    name: "library",
-    component: () => import("../views/LibraryView.vue"),
-  },
+
   {
     path: "/search",
     name: "SearchView",
@@ -33,6 +30,7 @@ const routes = [
   },
 
   ...homeRoutes,
+  ...libraryRoutes,
 ];
 
 const router = createRouter({
