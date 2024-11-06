@@ -54,10 +54,10 @@ import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
 import ClipLoader from "vue-spinner/src/ClipLoader";
+import { mapGetters } from "vuex";
 
 export default {
-  name: "SearchView",
-
+  name: "SearchComponent",
   data() {
     return {
       query: null,
@@ -76,26 +76,14 @@ export default {
   },
 
   computed: {
-    getSongs() {
-      return this.$store.getters.getSongs;
-    },
-
-    getArtists() {
-      return this.$store.getters.getArtists;
-    },
-
-    getAlbums() {
-      return this.$store.getters.getAlbums;
-    },
-    getNextSongs() {
-      return this.$store.getters.getNextSongs;
-    },
-    getSongsIsLoading() {
-      return this.$store.getters.getSongsIsLoading;
-    },
-    getErrorLoad() {
-      return this.$store.getters.getStartErrorLoad;
-    },
+    ...mapGetters({
+      getSongs: "search/getSongs",
+      getArtists: "search/getArtists",
+      getAlbums: "search/getAlbums",
+      getNextSongs: "getNextSongs",
+      getSongsIsLoading: "getSongsIsLoading",
+      getErrorLoad: "getStartErrorLoad",
+    }),
   },
 
   watch: {
@@ -180,8 +168,7 @@ export default {
   top: 57%;
   transform: translate(-50%, -57%);
 }
-</style>
-<style>
+
 ::-webkit-scrollbar {
   width: 7px;
 }

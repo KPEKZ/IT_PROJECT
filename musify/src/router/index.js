@@ -1,29 +1,13 @@
+import { aboutRoutes } from "@/modules/about/about.routes";
+import { homeRoutes } from "@/modules/home/home.routes";
+import { libraryRoutes } from "@/modules/library/library.routes";
+import { searchRoutes } from "@/modules/search/search.routes";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
     path: "/",
     redirect: "/home",
-  },
-  {
-    path: "/home",
-    name: "home",
-    component: () => import("../views/HomeView.vue"),
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: () => import("../views/AboutView.vue"),
-  },
-  {
-    path: "/library",
-    name: "library",
-    component: () => import("../views/LibraryView.vue"),
-  },
-  {
-    path: "/search",
-    name: "SearchView",
-    component: () => import("../views/SearchView"),
   },
   {
     path: "/album/:id",
@@ -35,6 +19,11 @@ const routes = [
     name: "ArtistView",
     component: () => import("../views/ArtistView"),
   },
+
+  ...searchRoutes,
+  ...homeRoutes,
+  ...libraryRoutes,
+  ...aboutRoutes,
 ];
 
 const router = createRouter({

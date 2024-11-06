@@ -80,13 +80,13 @@ export default {
   methods: {
     onAddToLibrary(artist) {
       saveArtistLocal(artist);
-      this.$store.dispatch("addLibraryArtist", artist);
+      this.$store.dispatch("library/addLibraryArtist", artist);
       this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(artist) {
       removeArtistLocal(artist.id);
-      this.$store.dispatch("deleteFromLibraryArtist", artist);
+      this.$store.dispatch("library/deleteFromLibraryArtist", artist);
     },
   },
 };

@@ -80,13 +80,13 @@ export default {
   methods: {
     onAddToLibrary(album) {
       saveAlbumLocal(album);
-      this.$store.dispatch("addLibraryAlbum", album);
+      this.$store.dispatch("library/addLibraryAlbum", album);
       this.snackBarIsOpened = true;
     },
 
     onDeleteFromLibrary(album) {
       removeAlbumLocal(album.id);
-      this.$store.dispatch("deleteFromLibraryAlbum", album);
+      this.$store.dispatch("library/deleteFromLibraryAlbum", album);
     },
   },
 };

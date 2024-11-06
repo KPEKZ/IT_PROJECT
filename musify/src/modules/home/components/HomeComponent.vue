@@ -43,6 +43,7 @@ import SongsList from "@/components/SongsList";
 import AlbumsList from "@/components/AlbumsList";
 import ArtistsList from "@/components/ArtistsList";
 import ClipLoader from "vue-spinner/src/ClipLoader";
+import { mapGetters } from "vuex";
 
 export default {
   name: "HomeComponent",
@@ -62,25 +63,13 @@ export default {
   },
 
   computed: {
-    getSongs() {
-      return this.$store.getters.getHomeSongs;
-    },
-
-    getAlbums() {
-      return this.$store.getters.getHomeAlbums;
-    },
-
-    getArtists() {
-      return this.$store.getters.getHomeArtists;
-    },
-
-    getSongsIsLoading() {
-      return this.$store.getters.getSongsIsLoading;
-    },
-
-    getErrorLoad() {
-      return this.$store.getters.getErrorLoad;
-    },
+    ...mapGetters({
+      getSongs: "home/getHomeSongs",
+      getAlbums: "home/getHomeAlbums",
+      getArtists: "home/getHomeArtists",
+      getSongsIsLoading: "getSongsIsLoading",
+      getErrorLoad: "getErrorLoad",
+    }),
   },
 
   watch: {
